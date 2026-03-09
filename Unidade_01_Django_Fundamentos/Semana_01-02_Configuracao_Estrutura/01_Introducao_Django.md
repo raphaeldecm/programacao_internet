@@ -308,7 +308,6 @@ Thumbs.db
 1. **Não commite venv/** no Git
 2. **Não use DEBUG=True** em produção
 3. **Não exponha SECRET_KEY** publicamente
-4. **Não modifique arquivos do Django** diretamente
 
 ---
 
@@ -337,23 +336,3 @@ Thumbs.db
 - [Real Python - Django](https://realpython.com/tutorials/django/)
 
 ---
-
-## 📌 Checklist de Conclusão
-
-Antes de prosseguir, certifique-se de que você:
-
-- [ ] Criou e ativou um ambiente virtual
-- [ ] Instalou o Django
-- [ ] Criou um projeto Django
-- [ ] Executou migrações iniciais
-- [ ] Criou um superusuário
-- [ ] Iniciou o servidor de desenvolvimento
-- [ ] Acessou a página de boas-vindas do Django
-- [ ] Acessou o Django Admin
-- [ ] Entendeu o conceito de MVT
-- [ ] Conhece os comandos básicos do manage.py
-- [ ] Criou arquivo .gitignore e requirements.txt
-
----
-
-**Próxima Aula:** Settings e Configurações Essenciais

@@ -1,4 +1,4 @@
-# Configuração e Estrutura Django - Parte 1
+# Aula 01 - Introdução ao Django
 
 ## 🎯 Objetivos de Aprendizagem
 
@@ -6,8 +6,9 @@ Ao final desta aula, você será capaz de:
 - Criar e ativar ambientes virtuais Python
 - Instalar e configurar o Django
 - Compreender a estrutura de um projeto Django
-- Criar e organizar apps Django
 - Entender o conceito MVT (Model-View-Template)
+- Configurar as principais definições no arquivo settings.py
+- Criar superusuário e acessar o Django Admin
 
 ---
 
@@ -140,8 +141,6 @@ python manage.py createsuperuser
 python manage.py shell
 ```
 
-> **Nota:** Você aprenderá mais comandos, incluindo a criação de apps, na próxima unidade!
-
 ---
 
 ## 4. Servidor de Desenvolvimento
@@ -225,13 +224,224 @@ Django utiliza o padrão **MVT** (Model-View-Template):
    - HTML com sintaxe do Django
    - Recebe dados da View
 
-> **Sobre Apps:** Você aprenderá a criar e organizar apps Django na **Unidade 2**, quando trabalharmos com URLs, Views e Templates. Por enquanto, vamos focar na estrutura básica do projeto!
+---
+
+## 6. O Arquivo settings.py
+
+O `settings.py` é o coração das configurações do Django. Vamos explorar as principais seções:
+
+### 6.1. Estrutura Básica e Paths
+
+```python
+from pathlib import Path
+
+# Build paths inside the project
+BASE_DIR = Path(__file__).resolve().parent.parent
+```
+
+**BASE_DIR**: Caminho absoluto do diretório raiz do projeto. Útil para referenciar outros arquivos.
 
 ---
 
-## 6. Organização de Projeto
+### 6.2. Segurança
 
-### Estrutura Básica
+#### SECRET_KEY
+
+```python
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-sua-chave-aqui'
+```
+
+**⚠️ IMPORTANTE:**
+- Usada para criptografia e assinaturas
+- **NUNCA** exponha em repositórios públicos
+- Mude em produção
+- Use variáveis de ambiente
+
+#### DEBUG
+
+```python
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+```
+
+**DEBUG = True**
+- ✅ Desenvolvimento: mostra erros detalhados
+- ❌ Produção: expõe informações sensíveis
+
+**DEBUG = False**
+- ✅ Produção: mensagens genéricas de erro
+- Requer configuração de `ALLOWED_HOSTS`
+
+#### ALLOWED_HOSTS
+
+```python
+ALLOWED_HOSTS = []  # Desenvolvimento
+
+# Produção
+ALLOWED_HOSTS = [
+    'meusite.com',
+    'www.meusite.com',
+    '192.168.1.100',
+]
+```
+
+Define quais domínios podem servir a aplicação.
+
+---
+
+### 6.3. Aplicações Instaladas
+
+```python
+INSTALLED_APPS = [
+    # Apps padrão do Django
+    'django.contrib.admin',        # Interface administrativa
+    'django.contrib.auth',         # Sistema de autenticação
+    'django.contrib.contenttypes', # Framework de tipos de conteúdo
+    'django.contrib.sessions',     # Framework de sessões
+    'django.contrib.messages',     # Framework de mensagens
+    'django.contrib.staticfiles',  # Gerenciamento de arquivos estáticos
+    
+    # Apps de terceiros (instalar depois)
+    # 'rest_framework',
+    
+    # Seus apps (criar nas próximas aulas)
+    # 'blog',
+    # 'portfolio',
+]
+```
+
+**Ordem importa!** Apps listados primeiro têm prioridade.
+
+---
+
+### 6.4. Configuração de Banco de Dados
+
+#### SQLite (Padrão - Desenvolvimento)
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```
+
+SQLite é perfeito para desenvolvimento e projetos pequenos. Não requer instalação separada.
+
+#### PostgreSQL (Recomendado para Produção)
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nome_do_banco',
+        'USER': 'usuario',
+        'PASSWORD': 'senha',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
+
+Instale o driver: `pip install psycopg2-binary`
+
+---
+
+### 6.5. Internacionalização e Localização
+
+```python
+# Idioma
+LANGUAGE_CODE = 'pt-br'  # Português do Brasil
+
+# Timezone
+TIME_ZONE = 'America/Fortaleza'  # ou seu fuso horário
+
+# Habilitar i18n e l10n
+USE_I18N = True   # Internacionalização
+USE_L10N = True   # Localização
+USE_TZ = True     # Timezone aware datetimes
+```
+
+Configurar corretamente garante que datas, horas e textos apareçam no formato brasileiro.
+
+---
+
+### 6.6. Arquivos Estáticos (CSS, JS, Imagens)
+
+```python
+# URL para acessar arquivos estáticos
+STATIC_URL = '/static/'
+
+# Diretórios adicionais de arquivos estáticos
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Diretório onde collectstatic vai reunir os arquivos (produção)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+```
+
+---
+
+### 6.7. Arquivos de Upload (Media)
+
+```python
+# URL para acessar arquivos de upload
+MEDIA_URL = '/media/'
+
+# Diretório onde arquivos de upload serão salvos
+MEDIA_ROOT = BASE_DIR / 'media'
+```
+
+---
+
+## 7. Migrações Iniciais e Django Admin
+
+### 7.1. Executar Migrações
+
+As migrações criam as tabelas necessárias no banco de dados:
+
+```bash
+python manage.py migrate
+```
+
+Isso cria o arquivo `db.sqlite3` com as tabelas do sistema (usuários, sessões, etc.).
+
+### 7.2. Criar Superusuário
+
+```bash
+python manage.py createsuperuser
+```
+
+Forneça:
+- **Username:** seu_nome
+- **Email:** seu@email.com
+- **Password:** (senha segura)
+
+### 7.3. Acessar o Django Admin
+
+Inicie o servidor:
+```bash
+python manage.py runserver
+```
+
+Acesse: **http://127.0.0.1:8000/admin**
+
+O Django Admin é uma interface administrativa poderosa que vem pronta com o Django! 🎉
+
+Você pode:
+- Gerenciar usuários e grupos
+- Visualizar e editar dados do banco
+- Controlar permissões
+- (Nas próximas aulas, adicionar seus próprios modelos)
+
+---
+
+## 8. Organizando o Projeto
+
+### 8.1. Estrutura Recomendada
 
 ```
 meu_projeto/
@@ -250,11 +460,9 @@ meu_projeto/
 └── .gitignore               # Arquivos ignorados pelo Git
 ```
 
-> **Nota:** Na próxima unidade, você aprenderá a adicionar **apps** ao projeto e organizar templates e arquivos estáticos!
-
 ---
 
-## 7. Arquivo .gitignore
+### 8.2. Arquivo .gitignore
 
 Crie um arquivo `.gitignore` na raiz do projeto:
 
@@ -293,7 +501,7 @@ Thumbs.db
 
 ---
 
-## 8. Boas Práticas
+## 9. Boas Práticas
 
 ### ✅ Sempre Faça
 
@@ -308,24 +516,62 @@ Thumbs.db
 1. **Não commite venv/** no Git
 2. **Não use DEBUG=True** em produção
 3. **Não exponha SECRET_KEY** publicamente
+4. **Não commite db.sqlite3** (use migrations)
 
 ---
 
-## 📝 Exercício Prático
+## 10. Comandos Essenciais do Manage.py
 
-### Crie seu primeiro projeto Django:
+```bash
+# Servidor
+python manage.py runserver
+
+# Banco de dados
+python manage.py migrate
+python manage.py makemigrations
+
+# Usuários
+python manage.py createsuperuser
+python manage.py changepassword username
+
+# Outros úteis
+python manage.py shell      # Shell Python interativo
+python manage.py check      # Verificar problemas no projeto
+python manage.py help       # Ver todos os comandos disponíveis
+```
+
+---
+
+## 📝 Exercícios Práticos
+
+### Exercício 1: Setup Completo
 
 1. Crie um ambiente virtual chamado `venv`
 2. Ative o ambiente virtual
 3. Instale Django 5.0
-4. Crie um projeto chamado `portfolio`
-5. Execute as migrações iniciais
-6. Crie um superusuário
-7. Inicie o servidor e acesse no navegador
-8. Acesse o Django Admin em `/admin`
-9. Crie um arquivo .gitignore
-10. Gere o arquivo requirements.txt
-11. Tire um print da página inicial do Django
+4. Crie um projeto chamado `meu_portfolio`
+5. Configure idioma para português e timezone para sua região
+6. Execute as migrações iniciais
+7. Crie um superusuário
+8. Inicie o servidor e acesse no navegador
+9. Acesse o Django Admin em `/admin`
+10. Crie um arquivo .gitignore
+11. Gere o arquivo requirements.txt
+
+### Exercício 2: Explorando Settings
+
+1. Mude o `LANGUAGE_CODE` para 'en-us' e observe a diferença no admin
+2. Volte para 'pt-br'
+3. Teste diferentes valores de `TIME_ZONE`
+4. Documente no README.md quais configurações você alterou
+
+### Exercício 3: Django Admin
+
+1. Faça login no Django Admin
+2. Crie 3 novos usuários
+3. Crie 2 grupos com nomes "Editores" e "Visitantes"
+4. Adicione usuários aos grupos
+5. Explore as permissões disponíveis
 
 ---
 
@@ -334,5 +580,18 @@ Thumbs.db
 - [Documentação Oficial Django](https://docs.djangoproject.com/pt-br/5.0/)
 - [Django Girls Tutorial](https://tutorial.djangogirls.org/pt/)
 - [Real Python - Django](https://realpython.com/tutorials/django/)
+- [Django Settings Best Practices](https://docs.djangoproject.com/en/5.0/topics/settings/)
 
 ---
+
+## 📚 Próxima Aula
+
+Na **Aula 02**, você aprenderá:
+- Como criar apps Django
+- Sistema de URLs e roteamento
+- Views: criando suas primeiras páginas
+- Trabalhando com requisições HTTP
+
+---
+
+**Prepare-se para começar a criar páginas web dinâmicas com Django!** 🚀

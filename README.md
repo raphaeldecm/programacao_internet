@@ -20,19 +20,66 @@ A disciplina aborda os conceitos fundamentais e práticos do desenvolvimento web
 
 ## Estrutura do Repositório
 
-O conteúdo está organizado em unidades temáticas que serão disponibilizadas ao longo do curso:
+O conteúdo está organizado por aulas sequenciais, cada uma com seu material teórico, projeto prático e referências:
 
 ```
 programacao_internet/
 ├── README.md
 ├── Planejamento_Disciplina.md
 ├── Materiais_de_Estudo.md
-├── Unidade_01_Django_Fundamentos/
-│   └── Semana_01-02_Configuracao_Estrutura/
-├── Unidade_02_URLs_Views_HTTP/
-│   └── Semana_03-04_Roteamento_Requisicoes/
-└── [mais unidades serão criadas ao longo do curso]
+├── Aula_01_Introducao_Django/
+│   ├── conteudo.md           # Material teórico
+│   ├── projeto_pratico.md    # Atividade prática
+│   └── referencia_rapida.md  # Referência rápida
+├── Aula_02_URLs_Views/
+│   ├── conteudo.md
+│   └── projeto_pratico.md
+├── Aula_03_Templates/
+│   ├── conteudo.md
+│   └── projeto_pratico.md
+└── Aula_04_JavaScript_Django/
+    ├── conteudo.md
+    └── projeto_pratico.md
 ```
+
+### 📚 Conteúdo das Aulas
+
+#### **Aula 01 - Introdução ao Django**
+- Ambientes virtuais (venv)
+- Instalação do Django
+- Estrutura de um projeto Django
+- Padrão MVT (Model-View-Template)
+- Arquivo settings.py e configurações
+- Django Admin
+- **Projeto Prático:** Configuração de ambiente e primeiro projeto
+
+#### **Aula 02 - URLs e Views**
+- Criando apps Django
+- Sistema de URLs e roteamento
+- Path converters e parâmetros
+- Function-Based Views (FBV)
+- Objeto Request e Response
+- Métodos HTTP (GET vs POST)
+- CSRF Protection
+- **Projeto Prático:** Site multi-páginas
+
+#### **Aula 03 - Templates**
+- Django Template Language (DTL)
+- Herança de templates
+- Tags ({% for %}, {% if %}, {% url %})
+- Filtros (date, truncatewords, etc)
+- Arquivos estáticos (CSS, JS, imagens)
+- Partials e includes
+- **Projeto Prático:** Blog com templates
+
+#### **Aula 04 - JavaScript com Django**
+- Integrando JavaScript nos templates
+- Fetch API e requisições assíncronas
+- AJAX com Django
+- Criando APIs JSON
+- Manipulação do DOM
+- Interações dinâmicas
+- **Projeto Prático:** To-Do List com JavaScript
 
 ## Tecnologias
 

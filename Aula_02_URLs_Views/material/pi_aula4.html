@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Django: Apps e Namespaces - Aula 04</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap");
+      :root {
+        --ifrn-green: #32a041; --ifrn-green-light: #4caf50; --ifrn-red: #e3101c;
+        --main-dark: #1a252f; --text-gray: #546e7a; --bg-light: #f8fafc;
+        --border-light: #e2e8f0; --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+      .reveal { font-family: "Inter", sans-serif; font-size: 32px; }
+      .reveal h1, .reveal h2 { color: var(--main-dark); text-transform: none; font-weight: 800; margin-bottom: 30px; }
+      .reveal h3 { color: var(--ifrn-green); text-transform: none; border-bottom: 3px solid var(--ifrn-green-light); padding-bottom: 15px; font-weight: 700; margin-bottom: 30px; }
+      .reveal section { text-align: left; }
+      .reveal section[data-align="center"] { text-align: center; }
+      .card { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; box-shadow: var(--card-shadow); border-left: 4px solid var(--ifrn-green); margin-bottom: 20px; }
+      .info-box { background: #e8f5e9; padding: 20px; border-radius: 10px; font-size: 0.7em; border: 1px solid #c8e6c9; margin-top: 15px;}
+      .code-filename { font-family: monospace; font-size: 0.5em; background: #333; color: #fff; padding: 5px 15px; border-radius: 5px 5px 0 0; display: inline-block; }
+      pre { margin: 0 !important; }
+      .footer-info { font-size: 0.8rem; color: var(--text-gray); position: absolute; bottom: 20px; width: 100%; text-align: center; z-index: 1000; }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        
+        <section data-align="center">
+          <h2 style="font-size: 1em; color: var(--text-gray); font-weight: 400">Programação para Internet</h2>
+          <h1 style="color: var(--ifrn-green); font-size: 2.2em">Modularização: Apps e Namespaces</h1>
+          <div style="margin: 40px 0; border-top: 2px solid var(--border-light); padding-top: 20px;">
+            <p style="font-size: 0.8em"><strong>Prof. Raphael Muniz</strong></p>
+          </div>
+          <div style="color: var(--ifrn-red); font-weight: 700; font-size: 0.7em">📦 Aula 04: Organizando a Casa</div>
+        </section>
+
+        <section>
+          <h3>🧩 O que é um App?</h3>
+          <p style="font-size: 0.8em">No Django, o projeto é o conjunto de configurações; o <strong>App</strong> é onde a funcionalidade vive.</p>
+          <div class="card">
+            <ul style="font-size: 0.75em;">
+              <li><strong>Modularidade:</strong> Separe "Blog" de "Vendas".</li>
+              <li><strong>Desacoplamento:</strong> Um app não deve depender internamente de outro.</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            Comando: <code>python manage.py startapp nome_do_app</code>
+          </div>
+        </section>
+
+        <section>
+          <h3>🔗 Roteamento Desacoplado</h3>
+          <p style="font-size: 0.7em">O arquivo de rotas do projeto delega o tráfego para o app específico.</p>
+          <div class="code-filename">projeto/urls.py (Principal)</div>
+          <pre><code class="python" data-trim>
+            from django.urls import path, include
+
+            urlpatterns = [
+                path('admin/', admin.site.urls),
+                # Delega tudo que começa vazio para o app 'website'
+                path('', include('website.urls', namespace='web')), 
+            ]
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>🛡️ Namespaces (app_name)</h3>
+          <p style="font-size: 0.7em">Evita que duas rotas com o mesmo nome (ex: 'index') entrem em conflito.</p>
+          <div class="code-filename">website/urls.py (No App)</div>
+          <pre><code class="python" data-trim>
+            from django.urls import path
+            from . import views
+
+            app_name = 'web' # O identificador do app
+
+            urlpatterns = [
+                path('', views.home, name='index'),
+            ]
+          </code></pre>
+          <p style="font-size: 0.6em; margin-top: 10px;">Referência no HTML: <code>{% url 'web:index' %}</code></p>
+        </section>
+
+        <section data-background-color="#1a252f">
+          <h3 style="color: #4caf50; border-color: #4caf50">🛠️ Mão na Massa: Modularização</h3>
+          
+          <div style="background: rgba(255,255,255,0.95); color: var(--main-dark); padding: 25px; border-radius: 12px; font-size: 0.7em;">
+            <h4 style="color: var(--ifrn-green); margin-bottom: 15px;">Objetivo: Criar um App de Portfólio</h4>
+            <ol style="line-height: 1.6">
+              <li>Crie um novo app chamado <strong><code>portfolio</code></strong>.</li>
+              <li>Crie uma view simples <code>contato</code> que renderiza um template.</li>
+              <li>Configure o <code>urls.py</code> do app com <code>app_name = 'port'</code>.</li>
+              <li>No app principal (website), crie um link no menu para a página de contato usando: <br>
+                  <code style="background: #eee; padding: 2px 5px;">&lt;a href="{% url 'port:contato' %}"&gt;</code>
+              </li>
+            </ol>
+          </div>
+          
+          <p style="color: #fff; margin-top: 25px; font-size: 0.6em">
+            ⏱️ <strong>Tempo:</strong> 30 min | 💡 <strong>Dica:</strong> Não esqueça de registrar o app no <code>settings.py</code>!
+          </p>
+        </section>
+
+        <section data-align="center">
+          <h2 style="color: var(--ifrn-green); font-size: 2em;">Dúvidas?</h2>
+          <p style="font-size: 0.7em; color: var(--text-gray)">Prof. Raphael Muniz | IFRN</p>
+          <p style="margin-top: 40px; font-weight: 700; color: var(--ifrn-red);">Próxima aula: Arquivos Estáticos e CSS</p>
+        </section>
+
+      </div>
+      <div class="footer-info">Prof. Raphael Muniz | Programação para Internet | IFRN</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true, center: true, transition: "slide", slideNumber: "c/t", progress: true,
+        plugins: [ RevealHighlight ]
+      });
+    </script>
+  </body>
+</html>

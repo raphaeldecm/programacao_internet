@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial Django — Projeto Mercado</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f0883e;
+    --accent4: #bc8cff;
+    --accent5: #ff7b72;
+    --yellow: #e3b341;
+    --code-bg: #0d1117;
+    --slide-w: 960px;
+  }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    width: 100%;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .site-header .logo {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .nav-info {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  #slide-counter { color: var(--text); font-weight: 600; }
+
+  /* ── CONTROLS ── */
+  .controls {
+    width: 100%;
+    max-width: var(--slide-w);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+  .btn-nav {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .btn-nav:hover { background: var(--bg3); border-color: var(--accent); }
+  .btn-nav:disabled { opacity: .35; cursor: default; }
+
+  .progress-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--bg3);
+    border-radius: 99px;
+    margin: 0 16px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width .3s;
+  }
+
+  /* ── SLIDE WRAPPER ── */
+  #slides-container {
+    width: 100%;
+    max-width: var(--slide-w);
+    flex: 1;
+    padding-bottom: 48px;
+  }
+
+  .slide {
+    display: none;
+    animation: fadeIn .25s ease;
+  }
+  .slide.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SLIDE CARD ── */
+  .slide-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .slide-header {
+    padding: 28px 36px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .slide-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+  .slide-header-text h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .slide-header-text .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 99px;
+    margin-left: 10px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .tag-setup  { background: #1f3347; color: var(--accent); }
+  .tag-config { background: #1f2d1f; color: var(--accent2); }
+  .tag-code   { background: #2d2012; color: var(--accent3); }
+  .tag-static { background: #2a1f3d; color: var(--accent4); }
+  .tag-url    { background: #3d1f1f; color: var(--accent5); }
+
+  .slide-body {
+    padding: 28px 36px;
+  }
+
+  /* ── EXPLANATION TEXT ── */
+  .exp {
+    font-size: 14px;
+    color: #c9d1d9;
+    line-height: 1.75;
+    margin-bottom: 18px;
+  }
+  .exp strong { color: var(--accent3); font-weight: 600; }
+  .exp code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    background: var(--bg3);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent4);
+  }
+
+  /* ── SECTION LABEL ── */
+  .sec-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--muted);
+    margin-bottom: 8px;
+    margin-top: 22px;
+  }
+  .sec-label:first-child { margin-top: 0; }
+
+  /* ── TERMINAL / CODE BLOCKS ── */
+  .terminal {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .terminal-bar {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .terminal-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+  .terminal-body {
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .terminal-body .prompt { color: var(--accent2); user-select: none; }
+  .terminal-body .cmd    { color: var(--text); }
+  .terminal-body .comment{ color: #484f58; }
+
+  /* ── FILE CODE BLOCK ── */
+  .file-block {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .file-header {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .file-icon {
+    font-size: 13px;
+  }
+  .file-path {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .file-path span { color: var(--text); }
+  .file-body {
+    padding: 16px 18px;
+    font-size: 12.5px;
+    line-height: 1.85;
+    overflow-x: auto;
+    tab-size: 4;
+    white-space: pre;
+  }
+
+  /* Syntax highlight colors */
+  .kw  { color: #ff7b72; }   /* keyword */
+  .fn  { color: #d2a8ff; }   /* function/class name */
+  .str { color: #a5d6ff; }   /* string */
+  .cmt { color: #484f58; }   /* comment */
+  .num { color: #f0883e; }   /* number */
+  .var { color: #ffa657; }   /* variable */
+  .tag2{ color: #7ee787; }   /* html tag */
+  .attr{ color: #79c0ff; }   /* attribute */
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid;
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .callout code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .callout-info   { border-color: var(--accent);  background: #1f3347; color: #b3cfe8; }
+  .callout-info code { background: #0d1e30; color: var(--accent); }
+  .callout-tip    { border-color: var(--accent2); background: #1f2d1f; color: #9fd99f; }
+  .callout-tip code { background: #0f1f0f; color: var(--accent2); }
+  .callout-warn   { border-color: var(--yellow);  background: #2d2215; color: #e0c97b; }
+  .callout-warn code { background: #1e1709; color: var(--yellow); }
+  .callout-danger { border-color: var(--accent5); background: #2d1f1f; color: #e8a09a; }
+
+  /* ── TWO-COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── TREE ── */
+  .tree {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    line-height: 2;
+    color: #c9d1d9;
+    margin-bottom: 14px;
+    white-space: pre;
+    overflow-x: auto;
+    display: block;
+  }
+  .tree .dir  { color: var(--accent); }
+  .tree .file { color: var(--text); }
+  .tree .note { color: var(--muted); font-size: 11px; }
+
+  /* ── STEP LIST ── */
+  .step-list { list-style: none; margin-bottom: 14px; }
+  .step-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #c9d1d9;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 24px;
+    height: 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── COVER SLIDE ── */
+  .cover {
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 40%, #0d2137 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cover-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--accent);
+    background: #1f3347;
+    border: 1px solid #3d6a9c;
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 24px;
+  }
+  .cover h1 {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, #e6edf3 0%, #79c0ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .cover-toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 600px;
+  }
+  .cover-toc-item {
+    font-size: 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    color: #c9d1d9;
+  }
+
+  /* ── INDEX LIST ── */
+  .idx-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .idx-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #c9d1d9;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .idx-item:hover { border-color: var(--accent); }
+  .idx-n { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); min-width: 22px; }
+
+  /* Keyboard hint */
+  .kb-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+  .kb-hint kbd {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  /* Inline badge */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    padding: 1px 7px;
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+  .badge-new  { background: #1f3347; color: var(--accent); }
+  .badge-edit { background: #2d2012; color: var(--accent3); }
+  .badge-imp  { background: #2a1f3d; color: var(--accent4); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="logo">🐍 Django — Projeto Mercado</span>
+  <span class="nav-info">Slide <span id="slide-counter">1</span> de <span id="slide-total">1</span></span>
+</header>
+
+<div class="controls" style="max-width:960px;width:100%;padding:16px 0;">
+  <button class="btn-nav" id="btn-prev" onclick="goTo(current-1)" disabled>← Anterior</button>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <button class="btn-nav" id="btn-next" onclick="goTo(current+1)">Próximo →</button>
+</div>
+
+<div id="slides-container">
+
+<!-- ══════════════════════════════════════════
+     SLIDE 1 — CAPA
+══════════════════════════════════════════ -->
+<div class="slide active" id="s1">
+  <div class="slide-card">
+    <div class="cover">
+      <div class="cover-badge">Tutorial Prático</div>
+      <h1>Desenvolvimento Web<br>com Django</h1>
+      <p>Do ambiente virtual à aplicação completa, com templates, arquivos estáticos, namespaces e URLs — usando o projeto <strong>mercado</strong> como exemplo.</p>
+      <div class="cover-toc">
+        <span class="cover-toc-item">Ambiente virtual</span>
+        <span class="cover-toc-item">Instalação do Django</span>
+        <span class="cover-toc-item">Criação do projeto</span>
+        <span class="cover-toc-item">Criação do app</span>
+        <span class="cover-toc-item">Settings</span>
+        <span class="cover-toc-item">Templates</span>
+        <span class="cover-toc-item">Arquivos estáticos</span>
+        <span class="cover-toc-item">URLs e namespaces</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 2 — ÍNDICE
+══════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">02</span>
+      <div class="slide-header-text">
+        <h2>Índice do Tutorial</h2>
+        <span class="subtitle">Visão geral das etapas abordadas</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="idx-list">
+        <div class="idx-item"><span class="idx-n">03</span>Ambiente virtual Python</div>
+        <div class="idx-item"><span class="idx-n">04</span>Instalação do Django</div>
+        <div class="idx-item"><span class="idx-n">05</span>Criando o projeto mercado</div>
+        <div class="idx-item"><span class="idx-n">06</span>Estrutura inicial do projeto</div>
+        <div class="idx-item"><span class="idx-n">07</span>Criando o app produtos</div>
+        <div class="idx-item"><span class="idx-n">08</span>Configurando o settings.py</div>
+        <div class="idx-item"><span class="idx-n">09</span>Templates e TEMPLATES</div>
+        <div class="idx-item"><span class="idx-n">10</span>Arquivos estáticos — conceitos</div>
+        <div class="idx-item"><span class="idx-n">11</span>STATIC_URL e STATICFILES_DIRS</div>
+        <div class="idx-item"><span class="idx-n">12</span>Estrutura de diretórios final</div>
+        <div class="idx-item"><span class="idx-n">13</span>URL conf do projeto principal</div>
+        <div class="idx-item"><span class="idx-n">14</span>View da home</div>
+        <div class="idx-item"><span class="idx-n">15</span>URLs do app produtos</div>
+        <div class="idx-item"><span class="idx-n">16</span>Namespace nas URLs</div>
+        <div class="idx-item"><span class="idx-n">17</span>Templates do projeto</div>
+        <div class="idx-item"><span class="idx-n">18</span>Templates do app</div>
+        <div class="idx-item"><span class="idx-n">19</span>{% load static %} e uso de CSS</div>
+        <div class="idx-item"><span class="idx-n">20</span>Uso de imagens e JS</div>
+        <div class="idx-item"><span class="idx-n">21</span>Resumo e fluxo geral</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 3 — AMBIENTE VIRTUAL
+══════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">03</span>
+      <div class="slide-header-text">
+        <h2>Ambiente Virtual Python <span class="tag tag-setup">Setup</span></h2>
+        <span class="subtitle">Isolando as dependências do projeto</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        Um <strong>ambiente virtual</strong> (virtualenv) cria um espaço isolado para as dependências Python do projeto,
+        evitando conflitos com outros projetos ou com a instalação global do Python.
+        É uma boa prática indispensável antes de qualquer projeto Django.
+      </p>
+
+      <div class="sec-label">Passo 1 — Criar o diretório e o ambiente virtual</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal</span>
+        </div>
+        <div class="terminal-body">
+<span class="comment"># Cria o diretório do projeto</span>
+<span class="prompt">$ </span><span class="cmd">mkdir mercado && cd mercado</span>
+
+<span class="comment"># Cria o ambiente virtual na pasta 'venv'</span>
+<span class="prompt">$ </span><span class="cmd">python -m venv venv</span>
+        </div>
+      </div>
+
+      <div class="sec-label">Passo 2 — Ativar o ambiente virtual</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal</span>
+        </div>
+        <div class="terminal-body">
+<span class="comment"># Linux / macOS</span>
+<span class="prompt">$ </span><span class="cmd">source venv/bin/activate</span>
+
+<span class="comment"># Windows (PowerShell)</span>
+<span class="prompt">PS> </span><span class="cmd">venv\Scripts\Activate.ps1</span>
+
+<span class="comment"># Windows (cmd.exe)</span>
+<span class="prompt">> </span><span class="cmd">venv\Scripts\activate.bat</span>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        Após a ativação, o prompt exibirá <code>(venv)</code> no início da linha, indicando que o ambiente está ativo.
+        Todas as instalações feitas com <code>pip</code> afetarão apenas este ambiente.
+      </div>
+      <div class="callout callout-warn">
+        O diretório <code>venv/</code> não deve ser incluído no repositório Git.
+        Adicione-o ao <code>.gitignore</code>: echo "venv/" >> .gitignore
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 4 — INSTALAÇÃO DO DJANGO
+══════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">04</span>
+      <div class="slide-header-text">
+        <h2>Instalação do Django <span class="tag tag-setup">Setup</span></h2>
+        <span class="subtitle">Instalando e verificando a versão</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        Com o ambiente virtual ativo, utilizamos o <strong>pip</strong> para instalar o Django.
+        O pip buscará o pacote no PyPI e instalará o Django junto com suas dependências dentro do ambiente virtual.
+      </p>
+
+      <div class="sec-label">Instalar o Django</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal — com (venv) ativo</span>
+        </div>
+        <div class="terminal-body">
+<span class="prompt">(venv) $ </span><span class="cmd">pip install django</span>
+        </div>
+      </div>
+
+      <div class="sec-label">Verificar a versão instalada</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal</span>
+        </div>
+        <div class="terminal-body">
+<span class="prompt">(venv) $ </span><span class="cmd">python -m django --version</span>
+<span class="comment"># Saída esperada: 5.x.x (ou a versão instalada)</span>
+        </div>
+      </div>
+
+      <div class="sec-label">Gerar arquivo de dependências</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal</span>
+        </div>
+        <div class="terminal-body">
+<span class="prompt">(venv) $ </span><span class="cmd">pip freeze > requirements.txt</span>
+<span class="comment"># Registra todas as dependências instaladas</span>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        O arquivo <code>requirements.txt</code> permite que qualquer outro desenvolvedor recrie o ambiente
+        com <code>pip install -r requirements.txt</code>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 5 — CRIAR PROJETO
+══════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">05</span>
+      <div class="slide-header-text">
+        <h2>Criando o Projeto Django <span class="tag tag-setup">Setup</span></h2>
+        <span class="subtitle">O comando django-admin startproject</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        O comando <code>django-admin startproject</code> gera a estrutura base de um projeto Django:
+        o arquivo de configurações, o roteador principal de URLs, as configurações de WSGI/ASGI e o <code>manage.py</code>.
+      </p>
+
+      <div class="sec-label">Criar o projeto mercado</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal</span>
+        </div>
+        <div class="terminal-body">
+<span class="comment"># O ponto (.) cria o projeto no diretório atual, sem subpasta extra</span>
+<span class="prompt">(venv) $ </span><span class="cmd">django-admin startproject mercado .</span>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        O uso do ponto <code>.</code> no final é uma convenção importante: evita a criação de um subdiretório
+        <code>mercado/mercado/</code> redundante, mantendo o <code>manage.py</code> na raiz do projeto.
+      </div>
+
+      <div class="sec-label">Testar o servidor de desenvolvimento</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal</span>
+        </div>
+        <div class="terminal-body">
+<span class="prompt">(venv) $ </span><span class="cmd">python manage.py runserver</span>
+<span class="comment"># Acesse: http://127.0.0.1:8000</span>
+<span class="comment"># Você verá a página padrão "The install worked successfully!"</span>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        O aviso sobre migrações pendentes (<code>unapplied migrations</code>) é normal neste momento.
+        Pode ser ignorado por enquanto; ele indica que as tabelas do banco ainda não foram criadas.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 6 — ESTRUTURA DO PROJETO
+══════════════════════════════════════════ -->
+<div class="slide" id="s6">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">06</span>
+      <div class="slide-header-text">
+        <h2>Estrutura Inicial do Projeto <span class="tag tag-setup">Setup</span></h2>
+        <span class="subtitle">Entendendo cada arquivo gerado</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="sec-label">Árvore de diretórios após startproject</div>
+      <div class="tree">
+<span class="dir">mercado/</span>           <span class="note">← raiz do projeto (diretório de trabalho)</span>
+├── <span class="dir">mercado/</span>        <span class="note">← pacote de configuração do projeto</span>
+│   ├── <span class="file">__init__.py</span>   <span class="note">← marca como pacote Python</span>
+│   ├── <span class="file">settings.py</span>  <span class="note">← todas as configurações do projeto</span>
+│   ├── <span class="file">urls.py</span>      <span class="note">← roteador principal de URLs</span>
+│   ├── <span class="file">asgi.py</span>      <span class="note">← ponto de entrada para servidores ASGI</span>
+│   └── <span class="file">wsgi.py</span>      <span class="note">← ponto de entrada para servidores WSGI</span>
+├── <span class="file">manage.py</span>       <span class="note">← utilitário de linha de comando do Django</span>
+├── <span class="file">requirements.txt</span><span class="note">← dependências do projeto</span>
+└── <span class="dir">venv/</span>           <span class="note">← ambiente virtual (não vai ao Git)</span>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="sec-label">manage.py</div>
+          <p class="exp">Ponto de entrada para comandos como <code>runserver</code>, <code>migrate</code>, <code>startapp</code>, <code>shell</code>, entre outros. Nunca deve ser editado manualmente.</p>
+        </div>
+        <div>
+          <div class="sec-label">settings.py</div>
+          <p class="exp">Centraliza todas as configurações: banco de dados, apps instalados, templates, arquivos estáticos, chave secreta, debug e muito mais.</p>
+        </div>
+        <div>
+          <div class="sec-label">urls.py</div>
+          <p class="exp">Define o roteamento principal do projeto. As URLs dos apps são incluídas aqui com <code>include()</code>, mantendo a organização modular.</p>
+        </div>
+        <div>
+          <div class="sec-label">wsgi.py / asgi.py</div>
+          <p class="exp">Interfaces de comunicação entre o Django e o servidor web em produção. Raramente são editados durante o desenvolvimento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 7 — CRIAR APP
+══════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">07</span>
+      <div class="slide-header-text">
+        <h2>Criando o App Produtos <span class="tag tag-setup">Setup</span></h2>
+        <span class="subtitle">O comando manage.py startapp</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        Um <strong>app</strong> no Django é um módulo Python autossuficiente que encapsula uma funcionalidade específica.
+        O projeto <em>mercado</em> pode ter vários apps: <em>produtos</em>, <em>clientes</em>, <em>pedidos</em>, etc.
+        Cada app pode ser reutilizado em outros projetos.
+      </p>
+
+      <div class="sec-label">Criar o app produtos</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-label">Terminal</span>
+        </div>
+        <div class="terminal-body">
+<span class="prompt">(venv) $ </span><span class="cmd">python manage.py startapp produtos</span>
+        </div>
+      </div>
+
+      <div class="sec-label">Estrutura gerada pelo startapp</div>
+      <div class="tree">
+<span class="dir">produtos/</span>
+├── <span class="file">__init__.py</span>   <span class="note">← marca como pacote Python</span>
+├── <span class="file">admin.py</span>      <span class="note">← registro de models no Django Admin</span>
+├── <span class="file">apps.py</span>       <span class="note">← configuração do app (nome, label)</span>
+├── <span class="file">models.py</span>     <span class="note">← definição dos models (tabelas do BD)</span>
+├── <span class="file">tests.py</span>      <span class="note">← testes automatizados do app</span>
+├── <span class="file">views.py</span>      <span class="note">← lógica das views (funções ou classes)</span>
+└── <span class="dir">migrations/</span>   <span class="note">← arquivos de migração do banco de dados</span>
+    └── <span class="file">__init__.py</span>
+      </div>
+
+      <div class="callout callout-warn">
+        Criar o app com <code>startapp</code> não é suficiente — é necessário registrá-lo no <code>settings.py</code>.
+        Isso será feito no próximo slide.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 8 — SETTINGS: INSTALLED_APPS
+══════════════════════════════════════════ -->
+<div class="slide" id="s8">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">08</span>
+      <div class="slide-header-text">
+        <h2>Configurando o settings.py <span class="tag tag-config">Config</span></h2>
+        <span class="subtitle">Registrando o app em INSTALLED_APPS</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        O Django precisa conhecer os apps que fazem parte do projeto.
+        Isso é feito adicionando o app à lista <strong>INSTALLED_APPS</strong> no <code>settings.py</code>.
+        A string adicionada referencia o arquivo <code>apps.py</code> do app.
+      </p>
+
+      <div class="sec-label">mercado/settings.py — seção INSTALLED_APPS <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">⚙️</span>
+          <span class="file-path">mercado/<span>settings.py</span></span>
+        </div>
+        <div class="file-body"><span class="var">INSTALLED_APPS</span> = [
+    <span class="str">'django.contrib.admin'</span>,
+    <span class="str">'django.contrib.auth'</span>,
+    <span class="str">'django.contrib.contenttypes'</span>,
+    <span class="str">'django.contrib.sessions'</span>,
+    <span class="str">'django.contrib.messages'</span>,
+    <span class="str">'django.contrib.staticfiles'</span>,
+
+    <span class="comment"># Apps do projeto</span>
+    <span class="str">'produtos.apps.ProdutosConfig'</span>,  <span class="comment"># ← nosso app</span>
+]</div>
+      </div>
+
+      <div class="callout callout-info">
+        A string <code>'produtos.apps.ProdutosConfig'</code> aponta para a classe <code>ProdutosConfig</code>
+        dentro do arquivo <code>produtos/apps.py</code>. Essa é a forma recomendada, pois permite
+        que o Django carregue metadados do app corretamente.
+      </div>
+
+      <div class="sec-label">produtos/apps.py — gerado automaticamente</div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🐍</span>
+          <span class="file-path">produtos/<span>apps.py</span></span>
+        </div>
+        <div class="file-body"><span class="kw">from</span> <span class="fn">django.apps</span> <span class="kw">import</span> AppConfig
+
+<span class="kw">class</span> <span class="fn">ProdutosConfig</span>(AppConfig):
+    default_auto_field = <span class="str">'django.db.models.BigAutoField'</span>
+    name = <span class="str">'produtos'</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 9 — SETTINGS: TEMPLATES
+══════════════════════════════════════════ -->
+<div class="slide" id="s9">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">09</span>
+      <div class="slide-header-text">
+        <h2>Configurando Templates <span class="tag tag-config">Config</span></h2>
+        <span class="subtitle">Definindo onde o Django buscará os arquivos HTML</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        O Django localiza arquivos de template com base na configuração <strong>TEMPLATES</strong> no <code>settings.py</code>.
+        Por padrão, a chave <code>DIRS</code> está vazia — é preciso apontar para o diretório global de templates do projeto.
+        Além disso, <code>APP_DIRS: True</code> instrui o Django a buscar templates dentro de cada app,
+        na subpasta <code>templates/</code>.
+      </p>
+
+      <div class="sec-label">mercado/settings.py — seção TEMPLATES <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">⚙️</span>
+          <span class="file-path">mercado/<span>settings.py</span></span>
+        </div>
+        <div class="file-body"><span class="kw">from</span> <span class="fn">pathlib</span> <span class="kw">import</span> Path
+
+<span class="var">BASE_DIR</span> = Path(__file__).resolve().parent.parent
+
+<span class="var">TEMPLATES</span> = [
+    {
+        <span class="str">'BACKEND'</span>: <span class="str">'django.template.backends.django.DjangoTemplates'</span>,
+        <span class="str">'DIRS'</span>: [<span class="var">BASE_DIR</span> / <span class="str">'templates'</span>],  <span class="comment"># ← pasta global de templates</span>
+        <span class="str">'APP_DIRS'</span>: <span class="kw">True</span>,               <span class="comment"># ← busca em app/templates/ automaticamente</span>
+        <span class="str">'OPTIONS'</span>: {
+            <span class="str">'context_processors'</span>: [
+                <span class="str">'django.template.context_processors.debug'</span>,
+                <span class="str">'django.template.context_processors.request'</span>,
+                <span class="str">'django.contrib.auth.context_processors.auth'</span>,
+                <span class="str">'django.contrib.messages.context_processors.messages'</span>,
+            ],
+        },
+    },
+]</div>
+      </div>
+
+      <div class="two-col">
+        <div class="callout callout-info" style="margin:0">
+          <strong>DIRS</strong> define caminhos explícitos onde o Django buscará templates.
+          Aqui aponta para <code>mercado/templates/</code> — a pasta global do projeto.
+          Use <code>BASE_DIR / 'templates'</code> para construir o caminho de forma portável.
+        </div>
+        <div class="callout callout-tip" style="margin:0">
+          <strong>APP_DIRS: True</strong> habilita a busca automática em
+          <code>nome_do_app/templates/</code> de cada app instalado.
+          Quando ativado, não é necessário listar esses caminhos manualmente em <code>DIRS</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 10 — STATIC: CONCEITOS
+══════════════════════════════════════════ -->
+<div class="slide" id="s10">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">10</span>
+      <div class="slide-header-text">
+        <h2>Arquivos Estáticos — Conceitos <span class="tag tag-static">Static</span></h2>
+        <span class="subtitle">CSS, JavaScript e imagens no Django</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        <strong>Arquivos estáticos</strong> são recursos que não mudam dinamicamente: folhas de estilo CSS,
+        scripts JavaScript, imagens, fontes, etc. O Django os gerencia por meio do app
+        <code>django.contrib.staticfiles</code>, que já vem habilitado por padrão.
+      </p>
+
+      <div class="sec-label">As três configurações essenciais</div>
+      <ul class="step-list">
+        <li>
+          <span class="step-num">1</span>
+          <div><strong style="color:var(--accent)">STATIC_URL</strong> — prefixo da URL pela qual os arquivos serão acessados no navegador.
+          Ex.: <code>/static/</code> significa que <code>style.css</code> será acessado em <code>/static/style.css</code>.</div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div><strong style="color:var(--accent2)">STATICFILES_DIRS</strong> — lista de diretórios onde o Django buscará arquivos estáticos
+          além dos diretórios <code>static/</code> internos de cada app. <strong>Não existe por padrão no settings.py — precisa ser criado manualmente.</strong></div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div><strong style="color:var(--accent3)">STATIC_ROOT</strong> — diretório destino usado pelo comando <code>collectstatic</code>
+          em produção, para centralizar todos os arquivos estáticos. Não é necessário em desenvolvimento.</div>
+        </li>
+      </ul>
+
+      <div class="callout callout-info">
+        Em desenvolvimento (com <code>DEBUG=True</code>), o Django serve os estáticos automaticamente.
+        Em produção, o servidor web (Nginx, Apache) deve ser configurado para servir a pasta <code>STATIC_ROOT</code>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 11 — SETTINGS: STATIC
+══════════════════════════════════════════ -->
+<div class="slide" id="s11">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">11</span>
+      <div class="slide-header-text">
+        <h2>STATIC_URL e STATICFILES_DIRS <span class="tag tag-static">Static</span></h2>
+        <span class="subtitle">Configurando os caminhos de arquivos estáticos</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        Ao final do <code>settings.py</code>, localize a variável <code>STATIC_URL</code> (já existe) e
+        adicione logo abaixo a variável <code>STATICFILES_DIRS</code>, que <strong>não existe por padrão</strong> e deve ser criada manualmente.
+      </p>
+
+      <div class="sec-label">mercado/settings.py — seção de estáticos <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">⚙️</span>
+          <span class="file-path">mercado/<span>settings.py</span></span>
+        </div>
+        <div class="file-body"><span class="comment"># Já existe — apenas confirme o valor</span>
+<span class="var">STATIC_URL</span> = <span class="str">'static/'</span>
+
+<span class="comment"># NÃO existe por padrão — deve ser CRIADA manualmente</span>
+<span class="var">STATICFILES_DIRS</span> = [
+    <span class="var">BASE_DIR</span> / <span class="str">'static'</span>,  <span class="comment"># ← pasta global de estáticos do projeto</span>
+]
+
+<span class="comment"># Necessário apenas em produção (collectstatic)</span>
+<span class="comment"># STATIC_ROOT = BASE_DIR / 'staticfiles'</span></div>
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>STATICFILES_DIRS</strong> não vem definido no <code>settings.py</code> padrão do Django.
+        É necessário criá-la explicitamente. Ela aponta para diretórios globais de estáticos —
+        separados dos diretórios <code>static/</code> internos de cada app.
+      </div>
+
+      <div class="callout callout-tip">
+        A pasta <code>static/</code> na raiz do projeto (referenciada por <code>STATICFILES_DIRS</code>)
+        é destinada a arquivos compartilhados entre todos os apps — como um CSS base ou logo do projeto.
+        Cada app pode ter seu próprio diretório <code>static/</code> interno.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 12 — ESTRUTURA FINAL
+══════════════════════════════════════════ -->
+<div class="slide" id="s12">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">12</span>
+      <div class="slide-header-text">
+        <h2>Estrutura de Diretórios Final <span class="tag tag-config">Config</span></h2>
+        <span class="subtitle">Como o projeto ficará organizado</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <div class="tree">
+<span class="dir">mercado/</span>                       <span class="note">← raiz do projeto</span>
+├── <span class="dir">mercado/</span>                   <span class="note">← pacote de configuração</span>
+│   ├── <span class="file">__init__.py</span>
+│   ├── <span class="file">settings.py</span>
+│   ├── <span class="file">urls.py</span>
+│   └── <span class="file">wsgi.py / asgi.py</span>
+│
+├── <span class="dir">produtos/</span>                   <span class="note">← app do projeto</span>
+│   ├── <span class="dir">static/</span>                <span class="note">← estáticos do app (APP_DIRS)</span>
+│   │   └── <span class="dir">produtos/</span>           <span class="note">← namespace: evita colisão</span>
+│   │       ├── <span class="file">style.css</span>
+│   │       ├── <span class="file">script.js</span>
+│   │       └── <span class="dir">img/</span>
+│   ├── <span class="dir">templates/</span>             <span class="note">← templates do app (APP_DIRS)</span>
+│   │   └── <span class="dir">produtos/</span>           <span class="note">← namespace: evita colisão</span>
+│   │       └── <span class="file">lista.html</span>
+│   ├── <span class="file">views.py</span>
+│   └── <span class="file">urls.py</span>
+│
+├── <span class="dir">static/</span>                    <span class="note">← estáticos globais (STATICFILES_DIRS)</span>
+│   ├── <span class="file">base.css</span>
+│   └── <span class="dir">img/</span>
+│
+├── <span class="dir">templates/</span>                 <span class="note">← templates globais (DIRS)</span>
+│   └── <span class="file">home.html</span>
+│
+├── <span class="file">manage.py</span>
+└── <span class="file">requirements.txt</span>
+      </div>
+
+      <div class="callout callout-info">
+        Note o padrão de <strong>subpasta com o nome do app</strong> dentro de <code>templates/</code> e <code>static/</code>
+        do app (<code>produtos/templates/produtos/</code>). Isso cria um <em>namespace</em> de arquivos
+        e evita conflitos quando dois apps têm um arquivo com o mesmo nome.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 13 — URL CONF PRINCIPAL
+══════════════════════════════════════════ -->
+<div class="slide" id="s13">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">13</span>
+      <div class="slide-header-text">
+        <h2>URL Conf do Projeto Principal <span class="tag tag-url">URLs</span></h2>
+        <span class="subtitle">Roteamento central com include()</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        O arquivo <code>mercado/urls.py</code> é o <strong>roteador principal</strong> do projeto.
+        Ele define a URL <code>home</code> do projeto e usa <code>include()</code> para delegar
+        as URLs do app <em>produtos</em> ao arquivo <code>urls.py</code> do próprio app.
+      </p>
+
+      <div class="sec-label">mercado/urls.py <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🔗</span>
+          <span class="file-path">mercado/<span>urls.py</span></span>
+        </div>
+        <div class="file-body"><span class="kw">from</span> <span class="fn">django.contrib</span> <span class="kw">import</span> admin
+<span class="kw">from</span> <span class="fn">django.urls</span> <span class="kw">import</span> path, include
+<span class="kw">from</span> <span class="fn">django.shortcuts</span> <span class="kw">import</span> render
+
+<span class="comment"># View simples da home — definida aqui por conveniência</span>
+<span class="kw">def</span> <span class="fn">home</span>(request):
+    <span class="kw">return</span> render(request, <span class="str">'home.html'</span>)
+
+urlpatterns = [
+    path(<span class="str">'admin/'</span>, admin.site.urls),
+
+    <span class="comment"># URL da página inicial do projeto</span>
+    path(<span class="str">''</span>, home, name=<span class="str">'home'</span>),
+
+    <span class="comment"># Delega as URLs do app produtos</span>
+    path(<span class="str">'produtos/'</span>, include(<span class="str">'produtos.urls'</span>)),
+]</div>
+      </div>
+
+      <div class="two-col">
+        <div class="callout callout-info" style="margin:0">
+          <code>path('', home, name='home')</code> mapeia a URL raiz (<code>/</code>) para a função <code>home</code>.
+          O parâmetro <code>name</code> permite referenciar a URL pelo nome em templates e views.
+        </div>
+        <div class="callout callout-tip" style="margin:0">
+          <code>include('produtos.urls')</code> delega qualquer URL que comece com <code>/produtos/</code>
+          para o arquivo <code>urls.py</code> do app, mantendo o código organizado e modular.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 14 — VIEW HOME
+══════════════════════════════════════════ -->
+<div class="slide" id="s14">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">14</span>
+      <div class="slide-header-text">
+        <h2>View da Home <span class="tag tag-code">View</span></h2>
+        <span class="subtitle">Renderizando o template home.html</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        A função <code>home</code> é uma <strong>view baseada em função</strong> (FBV — Function-Based View).
+        Ela recebe o objeto <code>request</code> (representando a requisição HTTP) e
+        retorna um objeto <code>HttpResponse</code> — neste caso, gerado pelo atalho <code>render()</code>,
+        que processa o template e devolve o HTML resultante.
+      </p>
+
+      <div class="sec-label">A função render() — entendendo os parâmetros</div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🐍</span>
+          <span class="file-path">mercado/<span>urls.py</span> (trecho)</span>
+        </div>
+        <div class="file-body"><span class="kw">from</span> <span class="fn">django.shortcuts</span> <span class="kw">import</span> render
+
+<span class="kw">def</span> <span class="fn">home</span>(request):
+    <span class="comment">#  render(request, template_name, context=None)</span>
+    <span class="comment">#  ├── request      → objeto da requisição HTTP</span>
+    <span class="comment">#  ├── 'home.html'  → caminho do template (relativo a DIRS ou app/templates)</span>
+    <span class="comment">#  └── context      → dicionário com dados para o template (opcional)</span>
+    <span class="kw">return</span> render(request, <span class="str">'home.html'</span>)</div>
+      </div>
+
+      <div class="sec-label">templates/home.html <span class="badge badge-new">novo</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🌐</span>
+          <span class="file-path">templates/<span>home.html</span></span>
+        </div>
+        <div class="file-body"><span class="tag2">&lt;!DOCTYPE html&gt;</span>
+<span class="tag2">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-br"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;head&gt;</span>
+    <span class="tag2">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag2">&gt;</span>
+    <span class="tag2">&lt;title&gt;</span>Mercado — Home<span class="tag2">&lt;/title&gt;</span>
+<span class="tag2">&lt;/head&gt;</span>
+<span class="tag2">&lt;body&gt;</span>
+    <span class="tag2">&lt;h1&gt;</span>Bem-vindo ao Mercado<span class="tag2">&lt;/h1&gt;</span>
+<span class="tag2">&lt;/body&gt;</span>
+<span class="tag2">&lt;/html&gt;</span></div>
+      </div>
+
+      <div class="callout callout-info">
+        O Django buscará <code>home.html</code> primeiro nos caminhos definidos em <code>DIRS</code>
+        (a pasta <code>templates/</code> na raiz do projeto) e depois nas pastas <code>templates/</code>
+        de cada app instalado, graças a <code>APP_DIRS: True</code>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 15 — URLs DO APP
+══════════════════════════════════════════ -->
+<div class="slide" id="s15">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">15</span>
+      <div class="slide-header-text">
+        <h2>URLs do App Produtos <span class="tag tag-url">URLs</span></h2>
+        <span class="subtitle">Criando o urls.py dentro do app</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        O app <em>produtos</em> não possui um <code>urls.py</code> gerado automaticamente pelo <code>startapp</code>.
+        Precisamos <strong>criar esse arquivo manualmente</strong> e nele definir as rotas específicas do app.
+      </p>
+
+      <div class="sec-label">produtos/urls.py <span class="badge badge-new">criar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🔗</span>
+          <span class="file-path">produtos/<span>urls.py</span></span>
+        </div>
+        <div class="file-body"><span class="kw">from</span> <span class="fn">django.urls</span> <span class="kw">import</span> path
+<span class="kw">from</span> <span class="fn">.</span> <span class="kw">import</span> views
+
+urlpatterns = [
+    <span class="comment"># /produtos/  → lista de produtos</span>
+    path(<span class="str">''</span>, views.lista, name=<span class="str">'lista'</span>),
+
+    <span class="comment"># /produtos/detalhes/  → detalhe de produto</span>
+    path(<span class="str">'detalhes/'</span>, views.detalhes, name=<span class="str">'detalhes'</span>),
+]</div>
+      </div>
+
+      <div class="sec-label">produtos/views.py <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🐍</span>
+          <span class="file-path">produtos/<span>views.py</span></span>
+        </div>
+        <div class="file-body"><span class="kw">from</span> <span class="fn">django.shortcuts</span> <span class="kw">import</span> render
+
+<span class="kw">def</span> <span class="fn">lista</span>(request):
+    <span class="kw">return</span> render(request, <span class="str">'produtos/lista.html'</span>)
+
+<span class="kw">def</span> <span class="fn">detalhes</span>(request):
+    <span class="kw">return</span> render(request, <span class="str">'produtos/detalhes.html'</span>)</div>
+      </div>
+
+      <div class="callout callout-tip">
+        Note que o caminho do template é <code>'produtos/lista.html'</code> — incluindo o nome do app como prefixo.
+        Isso corresponde ao arquivo em <code>produtos/templates/produtos/lista.html</code>,
+        seguindo a convenção de namespace por subpasta.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 16 — NAMESPACE
+══════════════════════════════════════════ -->
+<div class="slide" id="s16">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">16</span>
+      <div class="slide-header-text">
+        <h2>Namespace nas URLs <span class="tag tag-url">URLs</span></h2>
+        <span class="subtitle">Evitando conflitos de nomes entre apps</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        Quando um projeto tem vários apps, é comum que URLs com o mesmo <code>name</code> colidam.
+        O <strong>namespace</strong> resolve isso: permite referenciar URLs como <code>produtos:lista</code>
+        em vez de apenas <code>lista</code>, tornando o código mais claro e sem ambiguidade.
+      </p>
+
+      <div class="sec-label">Definir app_name no urls.py do app <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🔗</span>
+          <span class="file-path">produtos/<span>urls.py</span></span>
+        </div>
+        <div class="file-body"><span class="kw">from</span> <span class="fn">django.urls</span> <span class="kw">import</span> path
+<span class="kw">from</span> <span class="fn">.</span> <span class="kw">import</span> views
+
+<span class="comment"># Define o namespace do app</span>
+<span class="var">app_name</span> = <span class="str">'produtos'</span>
+
+urlpatterns = [
+    path(<span class="str">''</span>, views.lista, name=<span class="str">'lista'</span>),
+    path(<span class="str">'detalhes/'</span>, views.detalhes, name=<span class="str">'detalhes'</span>),
+]</div>
+      </div>
+
+      <div class="sec-label">Uso do namespace em templates HTML</div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🌐</span>
+          <span class="file-path">qualquer template</span>
+        </div>
+        <div class="file-body"><span class="comment">&lt;!-- Sem namespace (ambíguo se houver outros apps com 'lista') --&gt;</span>
+<span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'lista' %}"</span><span class="tag2">&gt;</span>Produtos<span class="tag2">&lt;/a&gt;</span>
+
+<span class="comment">&lt;!-- Com namespace (claro e sem colisão) --&gt;</span>
+<span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'produtos:lista' %}"</span><span class="tag2">&gt;</span>Produtos<span class="tag2">&lt;/a&gt;</span>
+<span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'produtos:detalhes' %}"</span><span class="tag2">&gt;</span>Detalhes<span class="tag2">&lt;/a&gt;</span></div>
+      </div>
+
+      <div class="callout callout-info">
+        A sintaxe <code>{% url 'namespace:nome' %}</code> é a template tag do Django para gerar URLs dinamicamente.
+        Ela garante que a URL seja atualizada automaticamente caso a rota mude no <code>urls.py</code>,
+        evitando URLs hardcoded nos templates.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 17 — TEMPLATES DO PROJETO
+══════════════════════════════════════════ -->
+<div class="slide" id="s17">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">17</span>
+      <div class="slide-header-text">
+        <h2>Templates do Projeto <span class="tag tag-code">Templates</span></h2>
+        <span class="subtitle">Arquivos HTML na pasta global templates/</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        A pasta <code>templates/</code> na raiz do projeto armazena templates de alcance global,
+        como a página inicial (<code>home.html</code>) e eventuais templates base (layouts compartilhados).
+        Esses arquivos são acessíveis a partir de qualquer view do projeto.
+      </p>
+
+      <div class="sec-label">templates/home.html — com link para o app <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🌐</span>
+          <span class="file-path">templates/<span>home.html</span></span>
+        </div>
+        <div class="file-body"><span class="tag2">&lt;!DOCTYPE html&gt;</span>
+<span class="tag2">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-br"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;head&gt;</span>
+    <span class="tag2">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag2">&gt;</span>
+    <span class="tag2">&lt;title&gt;</span>Mercado — Home<span class="tag2">&lt;/title&gt;</span>
+<span class="tag2">&lt;/head&gt;</span>
+<span class="tag2">&lt;body&gt;</span>
+
+    <span class="tag2">&lt;h1&gt;</span>Bem-vindo ao Mercado<span class="tag2">&lt;/h1&gt;</span>
+    <span class="tag2">&lt;p&gt;</span>Explore nossa loja.<span class="tag2">&lt;/p&gt;</span>
+
+    <span class="comment">&lt;!-- Uso do namespace para o link do app --&gt;</span>
+    <span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'produtos:lista' %}"</span><span class="tag2">&gt;</span>Ver Produtos<span class="tag2">&lt;/a&gt;</span>
+
+<span class="tag2">&lt;/body&gt;</span>
+<span class="tag2">&lt;/html&gt;</span></div>
+      </div>
+
+      <div class="callout callout-info">
+        A tag <code>{% url 'produtos:lista' %}</code> é resolvida em tempo de renderização pelo Django,
+        gerando a URL correspondente à view <code>lista</code> no app <code>produtos</code>.
+        Isso é equivalente a <code>/produtos/</code>, mas de forma dinâmica e desacoplada.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 18 — TEMPLATES DO APP
+══════════════════════════════════════════ -->
+<div class="slide" id="s18">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">18</span>
+      <div class="slide-header-text">
+        <h2>Templates do App Produtos <span class="tag tag-code">Templates</span></h2>
+        <span class="subtitle">Arquivos HTML dentro do app com namespace de pasta</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        Os templates do app ficam em <code>produtos/templates/produtos/</code>.
+        A subpasta com o nome do app é um <strong>namespace de templates</strong>:
+        garante que o arquivo seja identificado unicamente como <code>produtos/lista.html</code>
+        e não entre em conflito com um hipotético <code>lista.html</code> de outro app.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <div class="sec-label">produtos/templates/produtos/lista.html <span class="badge badge-new">criar</span></div>
+          <div class="file-block">
+            <div class="file-header">
+              <span class="file-icon">🌐</span>
+              <span class="file-path">produtos/templates/produtos/<span>lista.html</span></span>
+            </div>
+            <div class="file-body" style="font-size:11.5px"><span class="tag2">&lt;!DOCTYPE html&gt;</span>
+<span class="tag2">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-br"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;head&gt;</span>
+    <span class="tag2">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag2">&gt;</span>
+    <span class="tag2">&lt;title&gt;</span>Produtos<span class="tag2">&lt;/title&gt;</span>
+<span class="tag2">&lt;/head&gt;</span>
+<span class="tag2">&lt;body&gt;</span>
+    <span class="tag2">&lt;h1&gt;</span>Lista de Produtos<span class="tag2">&lt;/h1&gt;</span>
+    <span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'home' %}"</span><span class="tag2">&gt;</span>
+        Voltar
+    <span class="tag2">&lt;/a&gt;</span>
+<span class="tag2">&lt;/body&gt;</span>
+<span class="tag2">&lt;/html&gt;</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="sec-label">produtos/templates/produtos/detalhes.html <span class="badge badge-new">criar</span></div>
+          <div class="file-block">
+            <div class="file-header">
+              <span class="file-icon">🌐</span>
+              <span class="file-path">produtos/templates/produtos/<span>detalhes.html</span></span>
+            </div>
+            <div class="file-body" style="font-size:11.5px"><span class="tag2">&lt;!DOCTYPE html&gt;</span>
+<span class="tag2">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-br"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;head&gt;</span>
+    <span class="tag2">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag2">&gt;</span>
+    <span class="tag2">&lt;title&gt;</span>Detalhes<span class="tag2">&lt;/title&gt;</span>
+<span class="tag2">&lt;/head&gt;</span>
+<span class="tag2">&lt;body&gt;</span>
+    <span class="tag2">&lt;h1&gt;</span>Detalhes do Produto<span class="tag2">&lt;/h1&gt;</span>
+    <span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'produtos:lista' %}"</span><span class="tag2">&gt;</span>
+        Voltar
+    <span class="tag2">&lt;/a&gt;</span>
+<span class="tag2">&lt;/body&gt;</span>
+<span class="tag2">&lt;/html&gt;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        Os diretórios precisam ser criados manualmente. No terminal:
+        <code>mkdir -p produtos/templates/produtos</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 19 — LOAD STATIC E CSS
+══════════════════════════════════════════ -->
+<div class="slide" id="s19">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">19</span>
+      <div class="slide-header-text">
+        <h2>{% load static %} e Uso de CSS <span class="tag tag-static">Static</span></h2>
+        <span class="subtitle">Carregando a tag e vinculando folhas de estilo</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        Para usar arquivos estáticos em um template Django, é obrigatório <strong>carregar a biblioteca de tags estáticas</strong>
+        com <code>{% load static %}</code> no início do template. Em seguida, usa-se a tag
+        <code>{% static 'caminho/do/arquivo' %}</code> para gerar a URL correta do arquivo.
+      </p>
+
+      <div class="sec-label">Criando o arquivo CSS do app <span class="badge badge-new">criar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🎨</span>
+          <span class="file-path">produtos/static/produtos/<span>style.css</span></span>
+        </div>
+        <div class="file-body"><span class="comment">/* Estilos do app produtos */</span>
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: <span class="str">#f5f5f5</span>;
+    padding: <span class="num">20px</span>;
+}
+
+h1 {
+    color: <span class="str">#2c3e50</span>;
+    border-bottom: <span class="num">2px</span> solid <span class="str">#3498db</span>;
+    padding-bottom: <span class="num">8px</span>;
+}</div>
+      </div>
+
+      <div class="sec-label">Usando {% load static %} no template lista.html</div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🌐</span>
+          <span class="file-path">produtos/templates/produtos/<span>lista.html</span></span>
+        </div>
+        <div class="file-body"><span class="comment">&lt;!-- 1. Sempre a primeira linha — carrega as template tags de estáticos --&gt;</span>
+<span class="tag2">{% load static %}</span>
+
+<span class="tag2">&lt;!DOCTYPE html&gt;</span>
+<span class="tag2">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-br"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;head&gt;</span>
+    <span class="tag2">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag2">&gt;</span>
+    <span class="tag2">&lt;title&gt;</span>Produtos<span class="tag2">&lt;/title&gt;</span>
+
+    <span class="comment">&lt;!-- 2. {% static %} gera a URL correta para o arquivo CSS --&gt;</span>
+    <span class="tag2">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"{% static 'produtos/style.css' %}"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;/head&gt;</span>
+<span class="tag2">&lt;body&gt;</span>
+    <span class="tag2">&lt;h1&gt;</span>Lista de Produtos<span class="tag2">&lt;/h1&gt;</span>
+    <span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'home' %}"</span><span class="tag2">&gt;</span>Voltar<span class="tag2">&lt;/a&gt;</span>
+<span class="tag2">&lt;/body&gt;</span>
+<span class="tag2">&lt;/html&gt;</span></div>
+      </div>
+
+      <div class="callout callout-warn">
+        <code>{% load static %}</code> deve estar presente em <strong>cada template</strong> que usa arquivos estáticos.
+        Não é herdado de outros templates. Esquecer essa linha causa o erro: <code>Invalid block tag: 'static'</code>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 20 — IMAGENS E JS
+══════════════════════════════════════════ -->
+<div class="slide" id="s20">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">20</span>
+      <div class="slide-header-text">
+        <h2>Uso de Imagens e JavaScript <span class="tag tag-static">Static</span></h2>
+        <span class="subtitle">Aplicando {% static %} para todos os tipos de arquivo</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <p class="exp">
+        A tag <code>{% static %}</code> funciona da mesma forma para qualquer tipo de arquivo estático:
+        imagens, scripts JS, fontes, ícones, etc. O caminho passado é relativo à raiz de um dos
+        diretórios de estáticos configurados (STATICFILES_DIRS ou static/ do app).
+      </p>
+
+      <div class="sec-label">Estrutura dos arquivos a criar</div>
+      <div class="tree">
+<span class="dir">produtos/static/produtos/</span>
+├── <span class="file">style.css</span>
+├── <span class="file">script.js</span>
+└── <span class="dir">img/</span>
+    └── <span class="file">banner.png</span>
+      </div>
+
+      <div class="sec-label">produtos/static/produtos/script.js <span class="badge badge-new">criar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">📜</span>
+          <span class="file-path">produtos/static/produtos/<span>script.js</span></span>
+        </div>
+        <div class="file-body"><span class="comment">// Script simples de exemplo</span>
+<span class="fn">console</span>.log(<span class="str">'App produtos carregado!'</span>);</div>
+      </div>
+
+      <div class="sec-label">Template com imagem e JS <span class="badge badge-edit">editar</span></div>
+      <div class="file-block">
+        <div class="file-header">
+          <span class="file-icon">🌐</span>
+          <span class="file-path">produtos/templates/produtos/<span>lista.html</span></span>
+        </div>
+        <div class="file-body"><span class="tag2">{% load static %}</span>
+
+<span class="tag2">&lt;!DOCTYPE html&gt;</span>
+<span class="tag2">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-br"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;head&gt;</span>
+    <span class="tag2">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag2">&gt;</span>
+    <span class="tag2">&lt;title&gt;</span>Produtos<span class="tag2">&lt;/title&gt;</span>
+    <span class="tag2">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"{% static 'produtos/style.css' %}"</span><span class="tag2">&gt;</span>
+<span class="tag2">&lt;/head&gt;</span>
+<span class="tag2">&lt;body&gt;</span>
+
+    <span class="tag2">&lt;h1&gt;</span>Lista de Produtos<span class="tag2">&lt;/h1&gt;</span>
+
+    <span class="comment">&lt;!-- Exibindo uma imagem estática --&gt;</span>
+    <span class="tag2">&lt;img</span> <span class="attr">src</span>=<span class="str">"{% static 'produtos/img/banner.png' %}"</span>
+         <span class="attr">alt</span>=<span class="str">"Banner Produtos"</span>
+         <span class="attr">width</span>=<span class="str">"300"</span><span class="tag2">&gt;</span>
+
+    <span class="tag2">&lt;a</span> <span class="attr">href</span>=<span class="str">"{% url 'home' %}"</span><span class="tag2">&gt;</span>Voltar<span class="tag2">&lt;/a&gt;</span>
+
+    <span class="comment">&lt;!-- Script JS ao final do body --&gt;</span>
+    <span class="tag2">&lt;script</span> <span class="attr">src</span>=<span class="str">"{% static 'produtos/script.js' %}"</span><span class="tag2">&gt;&lt;/script&gt;</span>
+
+<span class="tag2">&lt;/body&gt;</span>
+<span class="tag2">&lt;/html&gt;</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 21 — RESUMO
+══════════════════════════════════════════ -->
+<div class="slide" id="s21">
+  <div class="slide-card">
+    <div class="slide-header">
+      <span class="slide-num">21</span>
+      <div class="slide-header-text">
+        <h2>Resumo e Fluxo Geral <span class="tag tag-config">Config</span></h2>
+        <span class="subtitle">Tudo o que foi configurado neste tutorial</span>
+      </div>
+    </div>
+    <div class="slide-body">
+      <ul class="step-list">
+        <li><span class="step-num">1</span><div><strong style="color:var(--accent)">Ambiente virtual</strong> — criado com <code>python -m venv venv</code> e ativado com <code>source venv/bin/activate</code>.</div></li>
+        <li><span class="step-num">2</span><div><strong style="color:var(--accent2)">Instalação</strong> — Django instalado com <code>pip install django</code> e dependências salvas em <code>requirements.txt</code>.</div></li>
+        <li><span class="step-num">3</span><div><strong style="color:var(--accent3)">Projeto</strong> — criado com <code>django-admin startproject mercado .</code>.</div></li>
+        <li><span class="step-num">4</span><div><strong style="color:var(--accent4)">App</strong> — criado com <code>python manage.py startapp produtos</code> e registrado em <code>INSTALLED_APPS</code>.</div></li>
+        <li><span class="step-num">5</span><div><strong style="color:var(--yellow)">Settings</strong> — INSTALLED_APPS, TEMPLATES (DIRS + APP_DIRS), STATIC_URL e STATICFILES_DIRS configurados.</div></li>
+        <li><span class="step-num">6</span><div><strong style="color:var(--accent)">URLs</strong> — projeto com URL <code>home</code> e <code>include('produtos.urls')</code>; app com <code>app_name</code> para namespace.</div></li>
+        <li><span class="step-num">7</span><div><strong style="color:var(--accent2)">Templates</strong> — globais em <code>templates/</code>; do app em <code>produtos/templates/produtos/</code> (namespace de pasta).</div></li>
+        <li><span class="step-num">8</span><div><strong style="color:var(--accent5)">Estáticos</strong> — CSS, JS e imagens em <code>produtos/static/produtos/</code>; carregados nos templates com <code>{% load static %}</code> e <code>{% static '...' %}</code>.</div></li>
+      </ul>
+
+      <div class="callout callout-tip">
+        Com essa estrutura, o projeto está pronto para crescer: novos apps seguem o mesmo padrão
+        de organização, garantindo consistência, isolamento e facilidade de manutenção.
+        O próximo passo natural é criar os <strong>models</strong> e usar dados reais nos templates.
+      </div>
+
+      <div style="text-align:center;margin-top:24px;font-size:13px;color:var(--muted)">
+        🐍 &nbsp; Tutorial — Django Projeto Mercado &nbsp;•&nbsp; Análise e Desenvolvimento de Sistemas
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slides-container -->
+
+<p class="kb-hint"><kbd>←</kbd> <kbd>→</kbd> para navegar entre slides</p>
+
+<script>
+let current = 1;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+document.getElementById('slide-total').textContent = total;
+
+function goTo(n) {
+  if (n < 1 || n > total) return;
+  slides[current - 1].classList.remove('active');
+  current = n;
+  slides[current - 1].classList.add('active');
+  document.getElementById('slide-counter').textContent = current;
+  document.getElementById('progress').style.width = ((current / total) * 100) + '%';
+  document.getElementById('btn-prev').disabled = current === 1;
+  document.getElementById('btn-next').disabled = current === total;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+});
+
+goTo(1);
+</script>
+
+</body>
+</html>

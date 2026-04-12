@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Tutorial: Do Zero ao App - Django</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap");
+      :root {
+        --ifrn-green: #32a041; --ifrn-green-light: #4caf50; --ifrn-red: #e3101c;
+        --main-dark: #1a252f; --text-gray: #546e7a; --bg-light: #f8fafc;
+        --border-light: #e2e8f0; --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+      .reveal { font-family: "Inter", sans-serif; font-size: 32px; }
+      .reveal h1, .reveal h2 { color: var(--main-dark); text-transform: none; font-weight: 800; margin-bottom: 20px; }
+      .reveal h3 { color: var(--ifrn-green); text-transform: none; border-bottom: 3px solid var(--ifrn-green-light); padding-bottom: 15px; font-weight: 700; margin-bottom: 20px; }
+      .reveal section { text-align: left; }
+      .reveal section[data-align="center"] { text-align: center; }
+      .card { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; box-shadow: var(--card-shadow); border-left: 4px solid var(--ifrn-green); margin-bottom: 20px; }
+      .code-filename { font-family: monospace; font-size: 0.45em; background: #333; color: #fff; padding: 5px 15px; border-radius: 5px 5px 0 0; display: inline-block; margin-top: 10px;}
+      pre { margin-top: 0 !important; font-size: 0.45em !important; width: 100% !important; }
+      .footer-info { font-size: 0.8rem; color: var(--text-gray); position: absolute; bottom: 20px; width: 100%; text-align: center; z-index: 1000; }
+      .step-badge { background: var(--ifrn-red); color: white; padding: 5px 12px; border-radius: 5px; font-size: 0.5em; vertical-align: middle; margin-right: 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        
+        <section data-align="center">
+          <h2 style="font-size: 1em; color: var(--text-gray); font-weight: 400">Guia Prático de Laboratório</h2>
+          <h1 style="color: var(--ifrn-green); font-size: 2.2em">Do Zero ao Primeiro App: Projeto Mercado</h1>
+          <div style="margin: 40px 0; border-top: 2px solid var(--border-light); padding-top: 20px;">
+            <p style="font-size: 0.8em"><strong>Prof. Raphael Muniz</strong></p>
+          </div>
+          <div style="color: var(--ifrn-red); font-weight: 700; font-size: 0.7em">🚀 Tutorial Completo de Configuração</div>
+        </section>
+
+        <section>
+          <h3><span class="step-badge">Passo 01</span>Ambiente Virtual</h3>
+          <p style="font-size: 0.7em">Isolando as dependências do projeto Mercado.</p>
+          <pre><code class="bash" data-trim>
+            # Criar a venv
+            python -m venv venv
+
+            # Ativar (Windows)
+            venv\Scripts\activate
+            
+            # Ativar (Linux/Mac)
+            source venv/bin/activate
+
+            # Instalar Django
+            pip install django
+          </code></pre>
+        </section>
+
+        <section>
+          <h3><span class="step-badge">Passo 02</span>Projeto e App</h3>
+          <p style="font-size: 0.7em">Iniciando a "Nave Mãe" (Projeto) e o Módulo (App).</p>
+          <pre><code class="bash" data-trim>
+            # Criar o projeto mercado
+            django-admin startproject mercado .
+
+            # Criar o app produtos
+            python manage.py startapp produtos
+          </code></pre>
+          <div class="card" style="font-size: 0.6em; margin-top: 20px;">
+            <strong>Nota:</strong> O ponto final no final do <code>startproject</code> evita que o Django crie uma pasta extra com o mesmo nome.
+          </div>
+        </section>
+
+        <section>
+          <h3><span class="step-badge">Passo 03</span>Settings: Apps e Templates</h3>
+          <p style="font-size: 0.7em">Avisando ao Django onde tudo está.</p>
+          <div class="code-filename">mercado/settings.py</div>
+          <pre><code class="python" data-trim data-line-numbers="3,10">
+            INSTALLED_APPS = [
+                ...,
+                'produtos',
+            ]
+
+            TEMPLATES = [
+                {
+                    ...,
+                    # Pasta global para a Home
+                    'DIRS': [BASE_DIR / 'templates'], 
+                    ...,
+                },
+            ]
+          </code></pre>
+        </section>
+
+        <section>
+          <h3><span class="step-badge">Passo 04</span>Settings: Estáticos</h3>
+          <p style="font-size: 0.75em">Configurando a busca manual de arquivos CSS/IMG.</p>
+          <div class="code-filename">mercado/settings.py (Final do arquivo)</div>
+          <pre><code class="python" data-trim>
+            STATIC_URL = 'static/'
+
+            # CRIE ESTA VARIÁVEL (Não vem por padrão):
+            STATICFILES_DIRS = [
+                BASE_DIR / "static",
+            ]
+          </code></pre>
+        </section>
+
+        <section>
+          <h3><span class="step-badge">Passo 05</span>A View da Home</h3>
+          <p style="font-size: 0.7em">Criando a primeira ponte visual no arquivo central.</p>
+          <div class="code-filename">mercado/urls.py</div>
+          <pre><code class="python" data-trim data-line-numbers="6-7,12,13">
+            from django.contrib import admin
+            from django.urls import path, include
+            from django.shortcuts import render
+
+            # View simples para feedback rápido
+            def home_view(request):
+                return render(request, 'home.html')
+
+            urlpatterns = [
+                path('admin/', admin.site.urls),
+                path('', home_view, name='home'),
+                path('produtos/', include('produtos.urls')),
+            ]
+          </code></pre>
+        </section>
+
+        <section>
+          <h3><span class="step-badge">Passo 06</span>Desacoplamento do App</h3>
+          <p style="font-size: 0.7em">Criando as regras internas do app <code>produtos</code>.</p>
+          <div class="code-filename">produtos/urls.py (Crie este arquivo)</div>
+          <pre><code class="python" data-trim>
+            from django.urls import path
+            from . import views
+
+            app_name = 'produtos'
+
+            urlpatterns = [
+                path('lista/', views.lista, name='lista_produtos'),
+            ]
+          </code></pre>
+          <div class="code-filename">produtos/views.py</div>
+          <pre><code class="python" data-trim>
+            def lista(request):
+                return render(request, 'produtos/lista.html')
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>📁 Hierarquia de Pastas</h3>
+          <p style="font-size: 0.7em">Como o seu projeto deve parecer no VS Code:</p>
+          <div class="card" style="font-family: monospace; font-size: 0.6em;">
+            mercado/<br>
+            ├── static/ &lt;-- Global<br>
+            ├── templates/<br>
+            │&nbsp;&nbsp; └── <strong>home.html</strong><br>
+            ├── produtos/<br>
+            │&nbsp;&nbsp; ├── static/produtos/css/<strong>style.css</strong><br>
+            │&nbsp;&nbsp; └── templates/produtos/<strong>lista.html</strong><br>
+            └── manage.py
+          </div>
+        </section>
+
+        <section data-background-color="#1a252f">
+          <h3 style="color: #4caf50; border-color: #4caf50">🚀 Hora do Teste!</h3>
+          <div style="background: rgba(255,255,255,0.95); padding: 25px; border-radius: 12px; font-size: 0.7em; color: #333;">
+            <p>No terminal, execute:</p>
+            <pre><code class="bash">python manage.py runserver</code></pre>
+            <p style="margin-top: 20px;">Acesse no navegador:</p>
+            <ul>
+              <li><strong>Home:</strong> 127.0.0.1:8000/</li>
+              <li><strong>App:</strong> 127.0.0.1:8000/produtos/lista/</li>
+            </ul>
+          </div>
+          <p style="color: #fff; margin-top: 20px; font-size: 0.6em; text-align: center;">Dica: Se a página carregar, a arquitetura está correta!</p>
+        </section>
+
+      </div>
+      <div class="footer-info">Prof. Raphael Muniz | Programação para Internet | IFRN</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true, center: true, transition: "slide", slideNumber: "c/t", progress: true,
+        plugins: [ RevealHighlight ]
+      });
+    </script>
+  </body>
+</html>

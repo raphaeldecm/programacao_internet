@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Django: Arquivos Estáticos e CSS - Aula 05</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap");
+      :root {
+        --ifrn-green: #32a041; --ifrn-green-light: #4caf50; --ifrn-red: #e3101c;
+        --main-dark: #1a252f; --text-gray: #546e7a; --bg-light: #f8fafc;
+        --border-light: #e2e8f0; --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+      .reveal { font-family: "Inter", sans-serif; font-size: 32px; }
+      .reveal h1, .reveal h2 { color: var(--main-dark); text-transform: none; font-weight: 800; margin-bottom: 30px; }
+      .reveal h3 { color: var(--ifrn-green); text-transform: none; border-bottom: 3px solid var(--ifrn-green-light); padding-bottom: 15px; font-weight: 700; margin-bottom: 30px; }
+      .reveal section { text-align: left; }
+      .reveal section[data-align="center"] { text-align: center; }
+      .card { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; box-shadow: var(--card-shadow); border-left: 4px solid var(--ifrn-green); margin-bottom: 20px; }
+      .highlight { color: var(--ifrn-red); font-weight: 700; }
+      .code-filename { font-family: monospace; font-size: 0.5em; background: #333; color: #fff; padding: 5px 15px; border-radius: 5px 5px 0 0; display: inline-block; }
+      pre { margin: 0 !important; }
+      .footer-info { font-size: 0.8rem; color: var(--text-gray); position: absolute; bottom: 20px; width: 100%; text-align: center; z-index: 1000; }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        
+        <section data-align="center">
+          <h2 style="font-size: 1em; color: var(--text-gray); font-weight: 400">Programação para Internet</h2>
+          <h1 style="color: var(--ifrn-green); font-size: 2.2em">Arquivos Estáticos e Estilização (CSS)</h1>
+          <div style="margin: 40px 0; border-top: 2px solid var(--border-light); padding-top: 20px;">
+            <p style="font-size: 0.8em"><strong>Prof. Raphael Muniz</strong></p>
+          </div>
+          <div style="color: var(--ifrn-red); font-weight: 700; font-size: 0.7em">🎨 Aula 05: A Cara do Projeto</div>
+        </section>
+
+        <section>
+          <h3>🖼️ O que são Static Files?</h3>
+          <p style="font-size: 0.8em">Arquivos que são entregues ao navegador "como estão", sem processamento pelo Python/Django.</p>
+          <div class="card">
+            <ul style="font-size: 0.75em;">
+              <li><strong>Folhas de Estilo:</strong> Arquivos <code>.css</code>.</li>
+              <li><strong>Imagens:</strong> <code>.jpg</code>, <code>.png</code>, <code>.svg</code>.</li>
+              <li><strong>Scripts:</strong> Arquivos <code>.js</code> (lado do cliente).</li>
+            </ul>
+          </div>
+          <p style="font-size: 0.6em; color: var(--text-gray)">No Django, gerenciamos isso via app <code>django.contrib.staticfiles</code>.</p>
+        </section>
+
+        <section>
+          <h3>📁 Organização das Pastas</h3>
+          <p style="font-size: 0.7em">Assim como nos templates, usamos <span class="highlight">Namespaces</span> para evitar conflitos entre apps.</p>
+          <div class="card" style="font-family: monospace; font-size: 0.65em; border-left-color: var(--ifrn-red);">
+            meu_app/<br>
+            └── static/<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;└── <strong>meu_app/</strong> &lt;-- Namespace do App<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── css/<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp; └── style.css<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── img/<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └── logo.png
+          </div>
+        </section>
+
+        <section>
+          <h3>⚡ A Tag {% load static %}</h3>
+          <p style="font-size: 0.7em">Para usar arquivos estáticos, precisamos avisar o motor de templates do Django no <span class="highlight">topo do arquivo</span>.</p>
+          
+          <div class="code-filename">templates/meu_app/home.html</div>
+          <pre><code class="html" data-trim data-line-numbers="1,5,8">
+            {% load static %}
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+            &lt;head&gt;
+                &lt;link rel="stylesheet" href="{% static 'meu_app/css/style.css' %}"&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;img src="{% static 'meu_app/img/banner.jpg' %}" alt="Banner"&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>⚙️ Bastidores: settings.py</h3>
+          <p style="font-size: 0.7em">O Django precisa saber onde procurar esses arquivos. Por padrão, ele busca na pasta <code>static</code> de cada app registrado.</p>
+          
+          <div class="code-filename">settings.py</div>
+          <pre><code class="python" data-trim>
+            # URL que o navegador usará para acessar os arquivos
+            STATIC_URL = 'static/'
+
+            # Onde o Django buscará arquivos extras (fora dos apps)
+            STATICFILES_DIRS = [
+                BASE_DIR / "static",
+            ]
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>🏆 Boas Práticas: CSS no Django</h3>
+          <ul style="font-size: 0.75em;">
+            <li><strong>Reset CSS:</strong> Use sempre um reset para garantir consistência entre navegadores.</li>
+            <li><strong>Caminhos Relativos:</strong> Dentro do seu CSS, caminhos para imagens devem ser relativos ao arquivo <code>.css</code>.</li>
+            <li><strong>Foco em UX:</strong> Já que estamos em uma abordagem Visual-First, incentive o uso de variáveis CSS para cores do IFRN.</li>
+          </ul>
+          <div class="card" style="margin-top: 15px; font-size: 0.6em;">
+            <strong>Dica:</strong> Em produção, usaremos o comando <code>collectstatic</code>, mas em desenvolvimento (DEBUG=True), o Django cuida de tudo sozinho.
+          </div>
+        </section>
+
+        <section data-background-color="#1a252f">
+          <h3 style="color: #4caf50; border-color: #4caf50">🛠️ Desafio: O Site com "Estilo"</h3>
+          
+          <div style="background: rgba(255,255,255,0.95); color: var(--main-dark); padding: 25px; border-radius: 12px; font-size: 0.7em;">
+            <ol style="line-height: 1.6">
+              <li>No seu app, crie a pasta <strong><code>static/nome_do_app/css/</code></strong>.</li>
+              <li>Crie um arquivo <code>style.css</code> e defina uma cor de fundo e uma fonte para o <code>body</code>.</li>
+              <li>No seu template <code>base.html</code>, carregue o CSS usando a tag <strong><code>{% static %}</code></strong>.</li>
+              <li><strong>Desafio Extra:</strong> Adicione uma imagem na pasta <code>img/</code> e exiba-a na sua página inicial.</li>
+            </ol>
+          </div>
+          <p style="color: #fff; margin-top: 25px; font-size: 0.6em">
+            ⏱️ <strong>Tempo:</strong> 40 min | 💡 <strong>Verificação:</strong> O console do navegador (F12) mostra erro 404 se o caminho estiver errado!
+          </p>
+        </section>
+
+        <section data-align="center">
+          <h2 style="color: var(--ifrn-green);">Concluído!</h2>
+          <p style="font-size: 0.8em;">Agora o projeto tem identidade visual.</p>
+          <div style="margin-top: 50px; font-size: 0.7em; color: var(--text-gray);">
+            Próxima parada: <strong>Function Based Views (FBVs) e Passagem de Contexto</strong>.
+          </div>
+        </section>
+
+      </div>
+      <div class="footer-info">Prof. Raphael Muniz | Programação para Internet | IFRN</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true, center: true, transition: "slide", slideNumber: "c/t", progress: true,
+        plugins: [ RevealHighlight ]
+      });
+    </script>
+  </body>
+</html>

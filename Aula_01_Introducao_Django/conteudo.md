@@ -1,6 +1,6 @@
 # Aula 01 - Introdução ao Django
 
-## 🎯 Objetivos de Aprendizagem
+## Objetivos de Aprendizagem
 
 Ao final desta aula, você será capaz de:
 - Criar e ativar ambientes virtuais Python

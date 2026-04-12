@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 02 - URLs e Views no Django</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/highlight/monokai.css">
+    <style>
+        .reveal {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fff;
+            font-size: 32px;
+        }
+        .reveal h1, .reveal h2, .reveal h3 {
+            text-transform: none;
+            color: #0C4B33;
+            font-weight: bold;
+        }
+        .reveal h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        .reveal h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        .reveal h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .reveal p {
+            margin: 8px 0;
+            font-size: 0.85em;
+        }
+        .reveal pre {
+            width: 100%;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            margin: 10px 0;
+            font-size: 0.45em;
+        }
+        .reveal pre code {
+            background: #2d3436;
+            padding: 15px;
+            max-height: 450px;
+            overflow: auto;
+            line-height: 1.4;
+        }
+        .reveal code {
+            padding: 2px 6px;
+            background: #2d3436;
+            color: #a8e6cf;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+        .reveal ul, .reveal ol {
+            font-size: 0.75em;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .reveal li {
+            margin: 5px 0;
+        }
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+            font-size: 0.8em;
+        }
+        .diagram-box {
+            background: #2C5F6F;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px auto;
+            color: #fff;
+            max-width: 950px;
+        }
+        .diagram-step {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 8px 0;
+            text-align: center;
+            font-size: 0.75em;
+        }
+        .highlight-box {
+            background: #E8F4F8;
+            border-left: 4px solid #0C4B33;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        .code-block-container {
+            background: #2d3436;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .table-container {
+            font-size: 0.6em;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #0C4B33;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #0C4B33;
+            color: #fff;
+            font-weight: bold;
+        }
+        .small-text {
+            font-size: 0.75em;
+        }
+        .flow-arrow {
+            font-size: 1.8em;
+            color: #4A90E2;
+            margin: 5px 0;
+            line-height: 1;
+        }
+        .tag {
+            background: #0C4B33;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px;
+            font-size: 0.7em;
+        }
+        .title-slide {
+            background: linear-gradient(135deg, #0C4B33 0%, #2C5F6F 100%);
+            color: #fff !important;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .title-slide h1, .title-slide h2, .title-slide p {
+            color: #fff !important;
+        }
+        .red-banner {
+            background: #C8102E;
+            color: #fff;
+            padding: 12px 35px;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 8px 0;
+            display: inline-block;
+            transform: skewX(-5deg);
+        }
+        .red-banner-text {
+            display: inline-block;
+            transform: skewX(5deg);
+        }
+        .django-logo {
+            width: 120px;
+            margin: 10px;
+        }
+        .footer-info {
+            position: absolute;
+            bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            font-size: 0.7em;
+        }
+        .icon-emoji {
+            font-size: 1em;
+            margin-right: 5px;
+        }
+        .reveal section {
+            height: 100%;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Título -->
+            <section class="title-slide">
+                <div style="text-align: center;">
+                    <div>
+                        <span class="red-banner"><span class="red-banner-text">Programação para</span></span>
+                    </div>
+                    <div>
+                        <span class="red-banner"><span class="red-banner-text">Internet</span></span>
+                    </div>
+                    <div style="margin-top: 60px;">
+                        <h2 style="font-size: 2.5em;">Aula 02 - URLs e Views</h2>
+                    </div>
+                </div>
+                <div class="footer-info">
+                    <div style="text-align: left;">
+                        <strong>Raphael Muniz</strong><br>
+                        <span class="small-text">raphael.muniz@ifrn.edu.br</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="https://portal.ifrn.edu.br/campus/paodosferros/@@images/image" 
+                             alt="IFRN" style="height: 80px; filter: brightness(0) invert(1);"
+                             onerror="this.style.display='none'">
+                    </div>
+                    <div style="text-align: right; font-size: 2em;">
+                        <strong>02</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Objetivos -->
+            <section>
+                <h2>🎯 Objetivos de Aprendizagem</h2>
+                <ul style="font-size: 0.85em;">
+                    <li>Criar e organizar apps Django</li>
+                    <li>Compreender o sistema de roteamento de URLs</li>
+                    <li>Criar Function-Based Views (FBV)</li>
+                    <li>Trabalhar com parâmetros em URLs</li>
+                    <li>Entender requisições e respostas HTTP</li>
+                    <li>Trabalhar com métodos GET e POST</li>
+                    <li>Implementar CSRF Protection</li>
+                </ul>
+            </section>
+
+            <!-- Slide 3: O que são Apps -->
+            <section>
+                <h2>📦 O que são Apps Django?</h2>
+                <div class="two-columns" style="font-size: 0.9em;">
+                    <div>
+                        <h3 style="font-size: 1em;">Projeto vs App</h3>
+                        <p style="margin: 5px 0;"><strong>Projeto:</strong></p>
+                        <ul style="font-size: 0.9em; line-height: 1.5;">
+                            <li>Configuração geral</li>
+                            <li>Settings centralizados</li>
+                            <li>URLs principais</li>
+                        </ul>
+                        <p style="margin: 10px 0 5px 0;"><strong>App:</strong></p>
+                        <ul style="font-size: 0.9em; line-height: 1.5;">
+                            <li>Funcionalidade específica</li>
+                            <li>Blog, Loja, Fórum...</li>
+                            <li>Reutilizável</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1em;">✅ Vantagens</h3>
+                        <ul style="font-size: 0.9em; line-height: 1.5;">
+                            <li>Organização modular</li>
+                            <li>Reutilização em outros projetos</li>
+                            <li>Separação de responsabilidades</li>
+                            <li>Manutenção facilitada</li>
+                            <li>Trabalho em equipe</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Criando um App -->
+            <section>
+                <h2>🛠️ Criando um App</h2>
+                <div class="code-block-container">
+                    <pre><code class="bash" data-trim>
+# Comando para criar app
+python manage.py startapp blog
+                    </code></pre>
+                </div>
+                <div class="highlight-box">
+                    <h3 style="font-size: 0.95em; margin-bottom: 10px;">Estrutura Criada:</h3>
+                    <pre style="font-size: 0.65em; margin: 0; background: transparent;"><code class="plaintext" data-trim style="background: transparent; color: #000;">
+blog/
+├── __init__.py       # Pacote Python
+├── admin.py          # Django Admin
+├── apps.py           # Config do app
+├── migrations/       # Histórico BD
+├── models.py         # Modelos
+├── tests.py          # Testes
+└── views.py          # Views
+                    </code></pre>
+                </div>
+                <div style="position: absolute; bottom: 15px; left: 20px;">
+                    <img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" 
+                         alt="Django" class="django-logo" onerror="this.style.display='none'">
+                </div>
+            </section>
+
+            <!-- Slide 5: Registrando o App -->
+            <section>
+                <h2>📝 Registrando o App</h2>
+                <p>Abra <code>settings.py</code> e adicione em <code>INSTALLED_APPS</code>:</p>
+                <div class="code-block-container">
+                    <pre><code class="python" data-trim>
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'blog',  # ⬅️ Seu app
+]
+                    </code></pre>
+                </div>
+                <div class="highlight-box">
+                    <strong>💡 Por que registrar?</strong><br>
+                    O Django precisa saber quais apps fazem parte do projeto para carregar templates, static files, migrations, etc.
+                </div>
+                <div style="position: absolute; bottom: 20px; left: 20px;">
+                    <img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" 
+                         alt="Django" class="django-logo" onerror="this.style.display='none'">
+                </div>
+            </section>
+
+            <!-- Slide 6: Sistema de Roteamento -->
+            <section>
+                <h2>🔀 Como funciona o Roteamento</h2>
+                <div class="diagram-box">
+                    <div class="diagram-step">
+                        🌐 Requisição: <code>http://site.com/blog/5/</code>
+                    </div>
+                    <div class="flow-arrow" style="text-align: center;">↓</div>
+                    <div class="diagram-step">
+                        📄 <strong>urls.py (projeto)</strong> - ROOT_URLCONF
+                    </div>
+                    <div class="flow-arrow" style="text-align: center;">↓</div>
+                    <div class="diagram-step">
+                        📄 <strong>urls.py (app)</strong> - include()
+                    </div>
+                    <div class="flow-arrow" style="text-align: center;">↓</div>
+                    <div class="diagram-step">
+                        ⚙️ <strong>View Function</strong> ou <strong>Class-Based</strong>
+                    </div>
+                    <div class="flow-arrow" style="text-align: center;">↓</div>
+                    <div class="diagram-step">
+                        📤 <strong>HttpResponse</strong> (HTML, JSON, etc)
+                    </div>
+                </div>
+                <div style="position: absolute; bottom: 20px; left: 20px;">
+                    <img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" 
+                         alt="Django" class="django-logo" onerror="this.style.display='none'">
+                </div>
+            </section>
+
+            <!-- Slide 7: URLs no Projeto -->
+            <section>
+                <h2>🗂️ URLs no Projeto Principal</h2>
+                <p><code>meu_projeto/urls.py</code>:</p>
+                <div class="code-block-container">
+                    <pre><code class="python" data-trim>
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    # Admin
+    path('admin/', admin.site.urls),
+    
+    # Apps
+    path('', include('home.urls')),           # Página inicial
+    path('blog/', include('blog.urls')),      # Blog
+    path('contato/', include('contato.urls')),# Contato
+]
+                    </code></pre>
+                </div>
+                <div class="highlight-box">
+                    💡 O <code>include()</code> delega o roteamento para o app específico
+                </div>
+                <div style="position: absolute; bottom: 20px; left: 20px;">
+                    <img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" 
+                         alt="Django" class="django-logo" onerror="this.style.display='none'">
+                </div>
+            </section>
+
+            <!-- Slide 8: URLs dentro de Apps -->
+            <section>
+                <h2>📋 URLs dentro de Apps</h2>
+                <p>Crie <code>blog/urls.py</code>:</p>
+                <div class="code-block-container">
+                    <pre><code class="python" data-trim>
+from django.urls import path
+from . import views
+
+app_name = 'blog'  # Namespace do app
+
+urlpatterns = [
+    path('', views.lista_posts, name='lista'),
+    path('&lt;int:post_id&gt;/', views.detalhe_post, name='detalhe'),
+    path('novo/', views.criar_post, name='criar'),
+    path('&lt;int:post_id&gt;/editar/', views.editar_post, name='editar'),
+    path('categoria/&lt;slug:slug&gt;/', views.posts_por_categoria, 
+         name='categoria'),
+]
+                    </code></pre>
+                </div>
+                <div style="position: absolute; bottom: 20px; left: 20px;">
+                    <img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" 
+                         alt="Django" class="django-logo" onerror="this.style.display='none'">
+                </div>
+            </section>
+
+            <!-- Slide 9: Função path() -->
+            <section>
+                <h2>🔧 Função path()</h2>
+                <pre><code class="python" data-trim>
+path(route, view, kwargs=None, name=None)
+                </code></pre>
+                <div class="two-columns small-text">
+                    <div>
+                        <strong>Parâmetros:</strong>
+                        <ol>
+                            <li><strong>route:</strong> String com o padrão da URL</li>
+                            <li><strong>view:</strong> Função ou classe de view</li>
+                            <li><strong>kwargs:</strong> Argumentos extras (opcional)</li>
+                            <li><strong>name:</strong> Nome único para a URL</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <div class="highlight-box">
+                            <strong>💡 Dica:</strong><br>
+                            Sempre use o parâmetro <code>name</code>! Facilita referências em templates e código.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10: Path Converters -->
+            <section>
+                <h2>🔄 Path Converters</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Converter</th>
+                                <th>Descrição</th>
+                                <th>Exemplo</th>
+                                <th>Uso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>str</code></td>
+                                <td>Qualquer string (exceto /)</td>
+                                <td><code>&lt;str:nome&gt;</code></td>
+                                <td>Nomes de usuário</td>
+                            </tr>
+                            <tr>
+                                <td><code>int</code></td>
+                                <td>Inteiro positivo ou zero</td>
+                                <td><code>&lt;int:id&gt;</code></td>
+                                <td>IDs numéricos</td>
+                            </tr>
+                            <tr>
+                                <td><code>slug</code></td>
+                                <td>Slug (letras, números, - e _)</td>
+                                <td><code>&lt;slug:slug&gt;</code></td>
+                                <td>URLs amigáveis</td>
+                            </tr>
+                            <tr>
+                                <td><code>uuid</code></td>
+                                <td>UUID format</td>
+                                <td><code>&lt;uuid:id&gt;</code></td>
+                                <td>IDs únicos</td>
+                            </tr>
+                            <tr>
+                                <td><code>path</code></td>
+                                <td>Qualquer string (inclui /)</td>
+                                <td><code>&lt;path:caminho&gt;</code></td>
+                                <td>Caminhos completos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Slide 11: Exemplos de Converters -->
+            <section>
+                <h2>💡 Exemplos Práticos</h2>
+                <pre><code class="python" data-trim>
+urlpatterns = [
+    # str: captura qualquer texto
+    path('perfil/&lt;str:username&gt;/', views.perfil),
+    # Captura: /perfil/joao123/
+    
+    # int: apenas números
+    path('produto/&lt;int:produto_id&gt;/', views.produto),
+    # Captura: /produto/42/
+    # Não captura: /produto/abc/
+    
+    # slug: formato de URL amigável
+    path('artigo/&lt;slug:slug&gt;/', views.artigo),
+    # Captura: /artigo/django-para-iniciantes/
+    
+    # múltiplos parâmetros
+    path('categoria/&lt;slug:categoria&gt;/&lt;int:ano&gt;/', views.por_ano),
+]
+                </code></pre>
+            </section>
+
+            <!-- Slide 12: O que são Views -->
+            <section>
+                <h2>👁️ O que são Views?</h2>
+                <div class="highlight-box">
+                    <strong>Views são funções ou classes Python que:</strong>
+                    <ul>
+                        <li>Recebem requisições HTTP (HttpRequest)</li>
+                        <li>Processam dados e lógica de negócio</li>
+                        <li>Retornam respostas HTTP (HttpResponse)</li>
+                    </ul>
+                </div>
+                <div class="two-columns small-text" style="margin-top: 30px;">
+                    <div>
+                        <span class="tag">Function-Based Views (FBV)</span>
+                        <p>Simples, diretas, ideais para iniciantes</p>
+                    </div>
+                    <div>
+                        <span class="tag">Class-Based Views (CBV)</span>
+                        <p>Reutilizáveis, herança, mais complexas</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 13: Primeira View -->
+            <section>
+                <h2>🎨 Sua Primeira View</h2>
+                <p><code>blog/views.py</code>:</p>
+                <pre><code class="python" data-trim>
+from django.http import HttpResponse
+
+def index(request):
+    """
+    View simples que retorna texto
+    """
+    return HttpResponse("Bem-vindo ao Blog!")
+
+def sobre(request):
+    """
+    View com HTML inline
+    """
+    html = """
+    &lt;html&gt;
+        &lt;body&gt;
+            &lt;h1&gt;Sobre o Blog&lt;/h1&gt;
+            &lt;p&gt;Este é um blog sobre Django.&lt;/p&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;
+    """
+    return HttpResponse(html)
+                </code></pre>
+            </section>
+
+            <!-- Slide 14: View com Parâmetros -->
+            <section>
+                <h2>📊 View com Parâmetros</h2>
+                <pre><code class="python" data-trim>
+from django.http import HttpResponse
+
+def detalhe_post(request, post_id):
+    """
+    View que recebe parâmetro da URL
+    """
+    return HttpResponse(f"Você está vendo o post #{post_id}")
+
+def posts_por_ano(request, ano, mes):
+    """
+    View com múltiplos parâmetros
+    """
+    return HttpResponse(f"Posts de {mes}/{ano}")
+
+def perfil(request, username):
+    """
+    View com parâmetro de texto
+    """
+    return HttpResponse(f"Perfil de {username}")
+                </code></pre>
+            </section>
+
+            <!-- Slide 15: HttpRequest -->
+            <section>
+                <h2>📨 Objeto HttpRequest</h2>
+                <p style="font-size: 0.8em;">O Django cria automaticamente um objeto <code>HttpRequest</code> com informações da requisição:</p>
+                <div class="two-columns" style="font-size: 0.85em;">
+                    <div>
+                        <strong>Atributos importantes:</strong>
+                        <ul style="font-size: 0.95em; line-height: 1.5; margin-top: 5px;">
+                            <li><code>request.method</code> - GET, POST...</li>
+                            <li><code>request.GET</code> - Query params</li>
+                            <li><code>request.POST</code> - Form data</li>
+                            <li><code>request.FILES</code> - Arquivos</li>
+                            <li><code>request.user</code> - Usuário</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>Métodos úteis:</strong>
+                        <ul style="font-size: 0.95em; line-height: 1.5; margin-top: 5px;">
+                            <li><code>request.is_ajax()</code></li>
+                            <li><code>request.get_host()</code></li>
+                            <li><code>request.get_full_path()</code></li>
+                            <li><code>request.META</code> - Headers</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 16: HttpResponse -->
+            <section>
+                <h2>📤 Objeto HttpResponse</h2>
+                <pre><code class="python" data-trim>
+from django.http import (
+    HttpResponse, 
+    JsonResponse, 
+    HttpResponseRedirect,
+    HttpResponseNotFound,
+    HttpResponseForbidden
+)
+
+# Resposta simples
+def view1(request):
+    return HttpResponse("Olá!")
+
+# Resposta JSON
+def view2(request):
+    data = {'nome': 'João', 'idade': 25}
+    return JsonResponse(data)
+
+# Redirecionamento
+def view3(request):
+    return HttpResponseRedirect('/outra-url/')
+
+# Erro 404
+def view4(request):
+    return HttpResponseNotFound("Página não encontrada")
+                </code></pre>
+            </section>
+
+            <!-- Slide 17: Métodos GET e POST -->
+            <section>
+                <h2>🔄 Métodos GET e POST</h2>
+                <div class="two-columns">
+                    <div>
+                        <h3>GET</h3>
+                        <ul class="small-text">
+                            <li>Buscar/ler dados</li>
+                            <li>Parâmetros na URL</li>
+                            <li>Pode ser cacheado</li>
+                            <li>Idempotente</li>
+                        </ul>
+                        <pre><code class="python" data-trim>
+# /busca/?q=django&pg=1
+def busca(request):
+    termo = request.GET.get('q')
+    pagina = request.GET.get('pg', 1)
+    return HttpResponse(
+        f"Buscando: {termo}"
+    )
+                        </code></pre>
+                    </div>
+                    <div>
+                        <h3>POST</h3>
+                        <ul class="small-text">
+                            <li>Criar/modificar dados</li>
+                            <li>Dados no corpo</li>
+                            <li>Não cacheado</li>
+                            <li>Não idempotente</li>
+                        </ul>
+                        <pre><code class="python" data-trim>
+def criar_post(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        conteudo = request.POST.get('conteudo')
+        # Salvar no banco
+        return HttpResponse("Post criado!")
+    return HttpResponse("Formulário")
+                        </code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 18: CSRF Protection -->
+            <section>
+                <h2>🔒 CSRF Protection</h2>
+                <div class="highlight-box">
+                    <strong>CSRF (Cross-Site Request Forgery):</strong> Ataque que força um usuário autenticado a executar ações indesejadas.
+                </div>
+                <p>Django protege automaticamente com tokens CSRF:</p>
+                <pre><code class="html" data-trim>
+&lt;form method="POST"&gt;
+    {% csrf_token %}
+    &lt;input type="text" name="titulo"&gt;
+    &lt;button type="submit"&gt;Enviar&lt;/button&gt;
+&lt;/form&gt;
+                </code></pre>
+                <div class="small-text" style="margin-top: 20px;">
+                    <strong>⚠️ Importante:</strong> Sempre use <code>{% csrf_token %}</code> em formulários POST!
+                </div>
+            </section>
+
+            <!-- Slide 19: Shortcuts úteis -->
+            <section>
+                <h2>⚡ Shortcuts Úteis</h2>
+                <pre><code class="python" data-trim>
+from django.shortcuts import render, redirect, get_object_or_404
+
+# Renderizar template
+def index(request):
+    return render(request, 'blog/index.html', {'titulo': 'Blog'})
+
+# Redirecionamento
+def logout(request):
+    # Lógica de logout
+    return redirect('blog:index')  # Redireciona para URL nomeada
+
+# Buscar ou retornar 404
+def detalhe(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    return render(request, 'blog/detalhe.html', {'post': post})
+                </code></pre>
+            </section>
+
+            <!-- Slide 20: URLs Nomeadas -->
+            <section>
+                <h2>🏷️ URLs Nomeadas</h2>
+                <div class="two-columns">
+                    <div>
+                        <h3>Em urls.py</h3>
+                        <pre><code class="python" data-trim>
+# blog/urls.py
+app_name = 'blog'
+
+urlpatterns = [
+    path('', views.index, 
+         name='index'),
+    path('&lt;int:id&gt;/', 
+         views.detalhe, 
+         name='detalhe'),
+]
+                        </code></pre>
+                    </div>
+                    <div>
+                        <h3>Em templates</h3>
+                        <pre><code class="django" data-trim>
+&lt;!-- Referência estática --&gt;
+&lt;a href="/blog/"&gt;Blog&lt;/a&gt;
+
+&lt;!-- URL nomeada (recomendado) --&gt;
+&lt;a href="{% url 'blog:index' %}"&gt;
+    Blog
+&lt;/a&gt;
+
+&lt;a href="{% url 'blog:detalhe' post.id %}"&gt;
+    Ver Post
+&lt;/a&gt;
+                        </code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 21: Exemplo Completo -->
+            <section>
+                <h2>📝 Exemplo Completo</h2>
+                <pre class="small-text"><code class="python" data-trim>
+# blog/views.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def lista_posts(request):
+    """Lista todos os posts"""
+    posts = [
+        {'id': 1, 'titulo': 'Primeiro Post', 'autor': 'João'},
+        {'id': 2, 'titulo': 'Segundo Post', 'autor': 'Maria'},
+        {'id': 3, 'titulo': 'Terceiro Post', 'autor': 'Pedro'},
+    ]
+    context = {
+        'posts': posts,
+        'total': len(posts)
+    }
+    return render(request, 'blog/lista.html', context)
+
+def detalhe_post(request, post_id):
+    """Mostra detalhes de um post"""
+    # Simulando busca no banco
+    post = {'id': post_id, 'titulo': f'Post #{post_id}'}
+    return render(request, 'blog/detalhe.html', {'post': post})
+                </code></pre>
+            </section>
+
+            <!-- Slide 22: Boas Práticas -->
+            <section>
+                <h2>✅ Boas Práticas</h2>
+                <ul style="font-size: 0.8em; line-height: 1.7;">
+                    <li>Use URLs nomeadas sempre que possível</li>
+                    <li>Organize apps por funcionalidade</li>
+                    <li>Mantenha views simples e focadas</li>
+                    <li>Use shortcuts do Django (<code>render</code>, <code>redirect</code>)</li>
+                    <li>Sempre inclua <code>{% csrf_token %}</code> em forms POST</li>
+                    <li>Valide dados recebidos de formulários</li>
+                    <li>Use namespaces para evitar conflitos de URLs</li>
+                    <li>Documente suas views com docstrings</li>
+                </ul>
+            </section>
+
+            <!-- Slide 23: Erros Comuns -->
+            <section>
+                <h2>⚠️ Erros Comuns</h2>
+                <div style="font-size: 0.75em;">
+                    <div class="highlight-box" style="padding: 10px; margin: 8px 0;">
+                        <strong>❌ Esquecer de registrar o app</strong><br>
+                        Sempre adicione o app em <code>INSTALLED_APPS</code>
+                    </div>
+                    <div class="highlight-box" style="padding: 10px; margin: 8px 0;">
+                        <strong>❌ URLs sem nome</strong><br>
+                        Dificulta manutenção. Use sempre <code>name='...'</code>
+                    </div>
+                    <div class="highlight-box" style="padding: 10px; margin: 8px 0;">
+                        <strong>❌ Esquecer csrf_token</strong><br>
+                        Forms POST precisam de <code>{% csrf_token %}</code>
+                    </div>
+                    <div class="highlight-box" style="padding: 10px; margin: 8px 0;">
+                        <strong>❌ Confundir ordem das URLs</strong><br>
+                        URLs mais específicas devem vir antes das genéricas
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 24: Próximos Passos -->
+            <section>
+                <h2>🚀 Próximos Passos</h2>
+                <div style="font-size: 0.8em;">
+                    <div class="diagram-box" style="padding: 15px; margin: 10px 0;">
+                        <h3 style="font-size: 1em; margin-bottom: 8px;">Você aprendeu:</h3>
+                        <ul style="font-size: 0.9em; line-height: 1.6; margin: 5px 0;">
+                            <li>Criar e registrar apps Django</li>
+                            <li>Sistema de roteamento de URLs</li>
+                            <li>Function-Based Views</li>
+                            <li>Parâmetros em URLs</li>
+                            <li>Request e Response HTTP</li>
+                        </ul>
+                    </div>
+                    <div class="diagram-box" style="padding: 15px; margin: 10px 0;">
+                        <h3 style="font-size: 1em; margin-bottom: 8px;">Próxima aula: Templates 📄</h3>
+                        <ul style="font-size: 0.9em; line-height: 1.6; margin: 5px 0;">
+                            <li>Sistema de templates do Django</li>
+                            <li>Template inheritance</li>
+                            <li>Filtros e tags</li>
+                            <li>Arquivos estáticos</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 25: Exercício Prático -->
+            <section>
+                <h2>💻 Exercício Prático</h2>
+                <div class="highlight-box" style="padding: 15px;">
+                    <h3 style="font-size: 1em; margin-bottom: 10px;">Criar um site institucional multi-páginas</h3>
+                    <ul style="font-size: 0.85em; line-height: 1.6;">
+                        <li>Criar um app chamado "institucional"</li>
+                        <li>Criar 5 views: index, sobre, serviços, contato, equipe</li>
+                        <li>Configurar URLs nomeadas para cada página</li>
+                        <li>Implementar navegação entre páginas</li>
+                        <li>Usar parâmetros em pelo menos uma URL</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.85em;">📖 Consulte: <code>projeto_pratico.md</code></p>
+            </section>
+
+            <!-- Slide 26: Recursos -->
+            <section>
+                <h2>📚 Recursos</h2>
+                <div class="two-columns" style="font-size: 0.8em;">
+                    <div>
+                        <h3 style="font-size: 1em;">Documentação</h3>
+                        <ul style="line-height: 1.6;">
+                            <li><a href="https://docs.djangoproject.com/en/5.0/topics/http/urls/" target="_blank">Django URLs</a></li>
+                            <li><a href="https://docs.djangoproject.com/en/5.0/topics/http/views/" target="_blank">Django Views</a></li>
+                            <li><a href="https://docs.djangoproject.com/en/5.0/ref/request-response/" target="_blank">Request/Response</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1em;">Materiais da Aula</h3>
+                        <ul style="line-height: 1.6;">
+                            <li>conteudo.md</li>
+                            <li>projeto_pratico.md</li>
+                            <li>Exemplos de código</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 27: Perguntas -->
+            <section class="title-slide">
+                <h1 style="font-size: 5em;">❓</h1>
+                <h2 style="font-size: 2.5em;">Perguntas?</h2>
+                <div style="margin-top: 60px;">
+                    <p style="font-size: 1.2em;">
+                        Programação para Internet
+                    </p>
+                    <p class="small-text" style="margin-top: 10px;">
+                        URLs e Views no Django
+                    </p>
+                </div>
+                <div class="footer-info">
+                    <div style="text-align: left;">
+                        <strong>Raphael Muniz</strong><br>
+                        <span class="small-text">raphael.muniz@ifrn.edu.br</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="https://portal.ifrn.edu.br/campus/paodosferros/@@images/image" 
+                             alt="IFRN" style="height: 80px; filter: brightness(0) invert(1);"
+                             onerror="this.style.display='none'">
+                    </div>
+                    <div style="text-align: right; font-size: 2em;">
+                        <strong>02</strong>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/plugin/search/search.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            center: false,
+            width: 1280,
+            height: 720,
+            margin: 0.05,
+            minScale: 0.3,
+            maxScale: 2.5,
+            overview: true,
+            plugins: [ RevealHighlight, RevealNotes, RevealZoom, RevealSearch ]
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 03 - Templates no Django</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    
+    <style>
+        :root {
+            --primary-red: #CC0000;
+            --text-color: #333;
+            --code-bg: #f5f5f5;
+        }
+        
+        .reveal {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 32px;
+            color: var(--text-color);
+        }
+        
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: var(--primary-red);
+            font-weight: 600;
+            text-transform: none;
+        }
+        
+        .reveal h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        
+        .reveal h2 {
+            font-size: 1.8em;
+            margin-bottom: 0.8em;
+        }
+        
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-bottom: 0.5em;
+        }
+        
+        .reveal strong {
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+        
+        .reveal em {
+            color: var(--primary-red);
+            font-style: normal;
+            font-weight: 500;
+        }
+        
+        .reveal code {
+            background: var(--code-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: var(--primary-red);
+        }
+        
+        .reveal pre {
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-red);
+        }
+        
+        .reveal pre code {
+            background: var(--code-bg);
+            padding: 20px;
+            font-size: 0.65em;
+            line-height: 1.5;
+            max-height: 500px;
+            color: var(--text-color);
+        }
+        
+        .reveal ul, .reveal ol {
+            text-align: left;
+            margin-left: 1em;
+        }
+        
+        .reveal li {
+            margin-bottom: 0.5em;
+        }
+        
+        .reveal .slides section {
+            text-align: left;
+            padding: 20px 40px;
+        }
+        
+        .reveal .slides section.center {
+            text-align: center;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7em;
+            color: #666;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .footer .professor {
+            text-align: left;
+        }
+        
+        .footer .slide-number {
+            text-align: right;
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+        
+        .highlight-box {
+            background: #fff5f5;
+            border-left: 4px solid var(--primary-red);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: var(--primary-red);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            margin-right: 10px;
+        }
+        
+        .small-text {
+            font-size: 0.8em;
+        }
+        
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Título -->
+            <section class="center">
+                <h1>Templates no Django</h1>
+                <h3 style="color: #666; font-weight: 400;">Aula 03 - Programação para Internet</h3>
+                <p style="margin-top: 60px; color: #888;">
+                    IFRN - Curso Técnico em Informática<br>
+                    4º Ano - Ensino Médio
+                </p>
+            </section>
+            
+            <!-- Slide 2: Objetivos -->
+            <section>
+                <h2>📋 Objetivos da Aula</h2>
+                <ul>
+                    <li>Entender o <strong>sistema de templates</strong> do Django</li>
+                    <li>Criar e organizar <strong>templates HTML</strong></li>
+                    <li>Usar <strong>variáveis</strong> para dados dinâmicos</li>
+                    <li>Implementar <strong>herança de templates</strong></li>
+                    <li>Usar tags: <code>{% if %}</code>, <code>{% for %}</code>, <code>{% url %}</code></li>
+                    <li>Trabalhar com <strong>arquivos estáticos</strong></li>
+                </ul>
+            </section>
+            
+            <!-- Slide 3: O que são Templates -->
+            <section>
+                <h2>1. O que são Templates?</h2>
+                <div class="highlight-box">
+                    <p><strong>Templates</strong> são arquivos HTML que o Django processa para gerar páginas dinâmicas.</p>
+                </div>
+                <h3>Eles permitem:</h3>
+                <ul>
+                    <li>Separar <strong>lógica de negócio</strong> da apresentação</li>
+                    <li><strong>Reutilizar</strong> código HTML</li>
+                    <li>Inserir <strong>dados dinâmicos</strong> vindos das views</li>
+                    <li>Aplicar lógica de apresentação (loops, condicionais)</li>
+                </ul>
+                
+                <p style="margin-top: 40px; font-size: 0.9em; color: var(--primary-red);">
+                    <strong>Django Template Language (DTL)</strong> - linguagem simples e poderosa
+                </p>
+            </section>
+            
+            <!-- Slide 4: Estrutura de Diretórios -->
+            <section>
+                <h2>2. Configurando Templates</h2>
+                <h3>Estrutura de Diretórios</h3>
+                <pre><code class="language-text">mercado/                    # Projeto principal
+├── templates/              # Templates globais
+│   └── base.html
+└── produtos/               # App
+    └── templates/
+        └── produtos/       # Namespace do app
+            ├── lista.html
+            └── detalhe.html</code></pre>
+                
+                <div class="highlight-box small-text">
+                    <strong>Por que usar namespace (produtos/)?</strong><br>
+                    Para evitar conflitos quando apps diferentes têm templates com o mesmo nome.
+                </div>
+            </section>
+            
+            <!-- Slide 5: Configuração settings.py -->
+            <section>
+                <h2>Configuração no settings.py</h2>
+                <pre><code class="language-python">TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],  # Templates globais
+        'APP_DIRS': True,  # Busca templates em cada app
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]</code></pre>
+            </section>
+            
+            <!-- Slide 6: Herança - Introdução -->
+            <section>
+                <h2>3. Herança de Templates</h2>
+                <div class="highlight-box">
+                    <p>A <strong>herança</strong> permite criar um template base com a estrutura comum e reutilizá-lo em várias páginas.</p>
+                </div>
+                
+                <h3 style="margin-top: 40px;">Benefícios:</h3>
+                <ul>
+                    <li><strong>Reutilização</strong> de código</li>
+                    <li><strong>Manutenção</strong> facilitada</li>
+                    <li><strong>Consistência</strong> visual</li>
+                    <li>Não repetir código (<em>DRY - Don't Repeat Yourself</em>)</li>
+                </ul>
+            </section>
+            
+            <!-- Slide 7: Template Base -->
+            <section>
+                <h2>Criando o Template Base</h2>
+                <p><strong>templates/base.html:</strong></p>
+                <pre><code class="language-html">{% load static %}
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;title&gt;{% block title %}Sistema de Mercado{% endblock %}&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{% static 'css/style.css' %}'"&gt;
+    {% block extra_css %}{% endblock %}
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;nav class="sidebar"&gt;
+        &lt;!-- Menu de navegação --&gt;
+    &lt;/nav&gt;
+    
+    &lt;main&gt;
+        {% block content %}
+        &lt;!-- Conteúdo específico aqui --&gt;
+        {% endblock %}
+    &lt;/main&gt;
+    
+    &lt;script src="{% static 'js/style.js' %}"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </section>
+            
+            <!-- Slide 8: Conceitos de Herança -->
+            <section>
+                <h2>Conceitos Importantes</h2>
+                <div class="two-columns">
+                    <div>
+                        <h3>{% block %}</h3>
+                        <p class="small-text">Define áreas que podem ser <strong>substituídas</strong> nos templates filhos</p>
+                        <pre><code class="language-django">{% block content %}
+  &lt;!-- conteúdo --&gt;
+{% endblock %}</code></pre>
+                    </div>
+                    
+                    <div>
+                        <h3>{% load static %}</h3>
+                        <p class="small-text">Carrega a funcionalidade de <strong>arquivos estáticos</strong></p>
+                        <pre><code class="language-django">{% load static %}
+{% static 'css/style.css' %}</code></pre>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Slide 9: Herdando Template -->
+            <section>
+                <h2>Herdando do Template Base</h2>
+                <p><strong>produtos/templates/produtos/lista.html:</strong></p>
+                <pre><code class="language-html">{% extends 'base.html' %}
+
+{% block title %}Produtos - {{ block.super }}{% endblock %}
+
+{% block content %}
+&lt;div class="produtos-container"&gt;
+    &lt;h2&gt;Produtos Disponíveis&lt;/h2&gt;
+    &lt;p&gt;Total: {{ total_produtos }} produtos&lt;/p&gt;
+&lt;/div&gt;
+{% endblock %}</code></pre>
+                
+                <div class="highlight-box small-text">
+                    <strong>Importante:</strong> <code>{% extends 'base.html' %}</code> deve ser a primeira linha!
+                </div>
+            </section>
+            
+            <!-- Slide 10: Passando Dados - Introdução -->
+            <section>
+                <h2>4. Passando Dados para Templates</h2>
+                <h3>Criando um Template Simples</h3>
+                <p><strong>produtos/templates/produtos/lista.html:</strong></p>
+                <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Lista de Produtos&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Produtos do Mercado&lt;/h1&gt;
+    &lt;p&gt;Bem-vindo ao sistema!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </section>
+            
+            <!-- Slide 11: Passando Dados da View -->
+            <section>
+                <h2>Passando Dados da View</h2>
+                <p><strong>produtos/views.py:</strong></p>
+                <pre><code class="language-python">from django.shortcuts import render
+
+def lista_produtos(request):
+    contexto = {
+        'titulo': 'Lista de Produtos',
+        'produtos': [
+            {'nome': 'Arroz 5kg', 'preco': 25.90, 'estoque': 150},
+            {'nome': 'Feijão 1kg', 'preco': 8.50, 'estoque': 200},
+            {'nome': 'Açúcar 1kg', 'preco': 4.99, 'estoque': 120},
+        ],
+        'total_produtos': 3
+    }
+    return render(request, 'produtos/lista.html', contexto)</code></pre>
+            </section>
+            
+            <!-- Slide 12: Usando Variáveis -->
+            <section>
+                <h2>Usando Variáveis no Template</h2>
+                <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;{{ titulo }}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;{{ titulo }}&lt;/h1&gt;
+    &lt;p&gt;Total de produtos: {{ total_produtos }}&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                
+                <div class="highlight-box">
+                    <strong>Sintaxe:</strong> <code>{{ nome_da_variavel }}</code>
+                </div>
+            </section>
+            
+            <!-- Slide 13: Notação de Ponto -->
+            <section>
+                <h2>Acessando Dados com Notação de Ponto</h2>
+                <pre><code class="language-html">&lt;!-- Acessar chave de dicionário --&gt;
+&lt;p&gt;{{ produto.nome }}&lt;/p&gt;
+&lt;p&gt;R$ {{ produto.preco }}&lt;/p&gt;
+&lt;p&gt;Estoque: {{ produto.estoque }} unidades&lt;/p&gt;
+
+&lt;!-- Acessar índice de lista --&gt;
+&lt;p&gt;Primeiro produto: {{ produtos.0.nome }}&lt;/p&gt;
+&lt;p&gt;Segundo produto: {{ produtos.1.nome }}&lt;/p&gt;</code></pre>
+            </section>
+            
+            <!-- Slide 14: Tag IF - Introdução -->
+            <section>
+                <h2>5. Tags Principais</h2>
+                <h3>Tag {% if %} - Condicionais</h3>
+                <p>Use <code>{% if %}</code> para exibir conteúdo <strong>condicionalmente</strong>.</p>
+                
+                <pre><code class="language-html">{% if condicao %}
+    &lt;p&gt;Conteúdo exibido se verdadeiro&lt;/p&gt;
+{% endif %}
+
+{% if usuario.is_authenticated %}
+    &lt;p&gt;Bem-vindo, {{ usuario.nome }}!&lt;/p&gt;
+{% else %}
+    &lt;p&gt;Por favor, faça login.&lt;/p&gt;
+{% endif %}</code></pre>
+            </section>
+            
+            <!-- Slide 15: Tag IF - Operadores -->
+            <section>
+                <h2>Tag {% if %} - Operadores</h2>
+                <pre><code class="language-html">&lt;!-- Comparação --&gt;
+{% if estoque > 10 %}
+    &lt;span&gt;Em estoque&lt;/span&gt;
+{% endif %}
+
+{% if estoque < 5 %}
+    &lt;span&gt;Estoque baixo!&lt;/span&gt;
+{% endif %}
+
+&lt;!-- Lógicos --&gt;
+{% if idade >= 18 and habilitado %}
+    &lt;p&gt;Pode dirigir&lt;/p&gt;
+{% endif %}
+
+{% if promocao or desconto %}
+    &lt;span&gt;Oferta!&lt;/span&gt;
+{% endif %}</code></pre>
+            </section>
+            
+            <!-- Slide 16: Tag FOR - Básico -->
+            <section>
+                <h2>Tag {% for %} - Loops</h2>
+                <p>Use <code>{% for %}</code> para percorrer <strong>listas</strong> e exibir dados repetidos.</p>
+                
+                <pre><code class="language-html">&lt;ul&gt;
+    {% for produto in produtos %}
+        &lt;li&gt;{{ produto.nome }} - R$ {{ produto.preco }}&lt;/li&gt;
+    {% endfor %}
+&lt;/ul&gt;
+
+&lt;!-- Com {% empty %} --&gt;
+&lt;ul&gt;
+    {% for produto in produtos %}
+        &lt;li&gt;{{ produto.nome }}&lt;/li&gt;
+    {% empty %}
+        &lt;li&gt;Nenhum produto encontrado&lt;/li&gt;
+    {% endfor %}
+&lt;/ul&gt;</code></pre>
+            </section>
+            
+            <!-- Slide 17: Tag FOR - Variáveis -->
+            <section>
+                <h2>Variáveis do forloop</h2>
+                <pre><code class="language-html">{% for produto in produtos %}
+    &lt;div&gt;
+        &lt;span&gt;{{ forloop.counter }}&lt;/span&gt;
+        &lt;h3&gt;{{ produto.nome }}&lt;/h3&gt;
+        
+        {% if forloop.first %}
+            &lt;span&gt;Destaque&lt;/span&gt;
+        {% endif %}
+        
+        {% if forloop.last %}
+            &lt;span&gt;Último&lt;/span&gt;
+        {% endif %}
+    &lt;/div&gt;
+{% endfor %}</code></pre>
+                
+                <div class="small-text">
+                    <strong>Variáveis disponíveis:</strong> <code>forloop.counter</code>, <code>forloop.counter0</code>, 
+                    <code>forloop.first</code>, <code>forloop.last</code>
+                </div>
+            </section>
+            
+            <!-- Slide 18: Tag URL -->
+            <section>
+                <h2>Tag {% url %} - URLs Nomeadas</h2>
+                <p>Use <code>{% url %}</code> para gerar URLs baseadas nos nomes do <code>urls.py</code>.</p>
+                
+                <pre><code class="language-html">&lt;!-- URLs simples --&gt;
+&lt;a href="{% url 'home' %}"&gt;Dashboard&lt;/a&gt;
+&lt;a href="{% url 'produtos:lista' %}"&gt;Ver Produtos&lt;/a&gt;
+
+&lt;!-- URLs com parâmetros --&gt;
+&lt;a href="{% url 'produtos:detalhe' produto_id=5 %}"&gt;
+    Ver detalhes
+&lt;/a&gt;
+
+&lt;a href="{% url 'vendas:relatorio' ano=2024 mes=3 %}"&gt;
+    Relatório Março/2024
+&lt;/a&gt;</code></pre>
+                
+                <div class="highlight-box small-text">
+                    <strong>Vantagem:</strong> Se você mudar a URL no urls.py, os templates são atualizados automaticamente!
+                </div>
+            </section>
+            
+            <!-- Slide 19: Arquivos Estáticos -->
+            <section>
+                <h2>6. Arquivos Estáticos</h2>
+                <h3>Tag {% load static %}</h3>
+                <pre><code class="language-html">{% load static %}
+
+&lt;!-- CSS --&gt;
+&lt;link rel="stylesheet" href="{% static 'css/style.css' %}"&gt;
+
+&lt;!-- JavaScript --&gt;
+&lt;script src="{% static 'js/style.js' %}"&gt;&lt;/script&gt;
+
+&lt;!-- Imagens --&gt;
+&lt;img src="{% static 'img/logo.png' %}" alt="Logo"&gt;
+&lt;img src="{% static 'img/profile.png' %}" alt="Perfil"&gt;</code></pre>
+            </section>
+            
+            <!-- Slide 20: Estrutura de Estáticos -->
+            <section>
+                <h2>Estrutura de Diretórios</h2>
+                <pre><code class="language-text">mercado/
+├── static/                  # Arquivos estáticos globais
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── style.js
+│   └── img/
+│       ├── logo.png
+│       └── profile.png
+└── produtos/
+    └── static/
+        └── produtos/        # Namespace do app
+            ├── css/
+            │   └── produtos.css
+            └── js/
+                └── produtos.js</code></pre>
+            </section>
+            
+            <!-- Slide 21: Configuração Estáticos -->
+            <section>
+                <h2>Configuração no settings.py</h2>
+                <pre><code class="language-python"># URL para acessar arquivos estáticos
+STATIC_URL = '/static/'
+
+# Diretórios adicionais de arquivos estáticos
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Diretório onde collectstatic reúne arquivos (produção)
+STATIC_ROOT = BASE_DIR / 'staticfiles'</code></pre>
+            </section>
+            
+            <!-- Slide 22: Exemplo Completo - View -->
+            <section>
+                <h2>7. Exemplo Completo</h2>
+                <h3>View com Dados Fictícios</h3>
+                <pre><code class="language-python">def home(request):
+    contexto = {
+        'page_title': 'Dashboard',
+        'estatisticas': [
+            {'label': 'Total de Produtos', 'value': 150},
+            {'label': 'Vendas Hoje', 'value': 42},
+            {'label': 'Clientes Ativos', 'value': 328},
+        ],
+        'produtos_destaque': [
+            {'nome': 'Arroz 5kg', 'preco': 25.90, 'estoque': 150},
+            {'nome': 'Feijão 1kg', 'preco': 8.50, 'estoque': 200},
+        ]
+    }
+    return render(request, 'home.html', contexto)</code></pre>
+            </section>
+            
+            <!-- Slide 23: Exemplo Completo - Template -->
+            <section>
+                <h2>Template com Herança e Tags</h2>
+                <pre><code class="language-html">{% extends 'base.html' %}
+
+{% block content %}
+&lt;div class="dashboard"&gt;
+    &lt;div class="stats-grid"&gt;
+        {% for stat in estatisticas %}
+        &lt;div class="stat-card"&gt;
+            &lt;h3&gt;{{ stat.value }}&lt;/h3&gt;
+            &lt;p&gt;{{ stat.label }}&lt;/p&gt;
+        &lt;/div&gt;
+        {% endfor %}
+    &lt;/div&gt;
+    
+    {% if produtos_destaque %}
+        {% for produto in produtos_destaque %}
+        &lt;div&gt;
+            &lt;h3&gt;{{ produto.nome }}&lt;/h3&gt;
+            {% if produto.estoque < 10 %}
+                &lt;span&gt;Estoque baixo!&lt;/span&gt;
+            {% endif %}
+        &lt;/div&gt;
+        {% endfor %}
+    {% endif %}
+&lt;/div&gt;
+{% endblock %}</code></pre>
+            </section>
+            
+            <!-- Slide 24: Boas Práticas -->
+            <section>
+                <h2>8. Boas Práticas</h2>
+                <div class="two-columns">
+                    <div>
+                        <h3 style="color: green;">✅ Faça</h3>
+                        <ul class="small-text">
+                            <li>Use herança de templates</li>
+                            <li>Carregue <code>{% load static %}</code></li>
+                            <li>Use URLs nomeadas</li>
+                            <li>Use <code>{% empty %}</code> em loops</li>
+                            <li>Use <code>{% if %}</code> para condicionais</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: var(--primary-red);">❌ Evite</h3>
+                        <ul class="small-text">
+                            <li>URLs fixas/hardcoded</li>
+                            <li>Esquecer <code>{% load static %}</code></li>
+                            <li>Lógica complexa em templates</li>
+                            <li>Repetir código (use herança!)</li>
+                            <li>Não usar namespace</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Slide 25: Exercícios -->
+            <section>
+                <h2>9. Exercícios Práticos</h2>
+                
+                <h3><span class="badge">1</span> Template Base</h3>
+                <p class="small-text">Crie um template base com cabeçalho, área de conteúdo e rodapé. Crie 2 páginas filhas.</p>
+                
+                <h3><span class="badge">2</span> Usando Tags</h3>
+                <p class="small-text">Crie uma lista de 5 produtos e exiba com <code>{% for %}</code>. Use <code>{% if %}</code> para mostrar "Estoque baixo" quando < 10.</p>
+                
+                <h3><span class="badge">3</span> Dashboard</h3>
+                <p class="small-text">Crie uma view com estatísticas e produtos recentes. Use loops e condicionais no template.</p>
+            </section>
+            
+            <!-- Slide 26: Resumo -->
+            <section>
+                <h2>Resumo da Aula</h2>
+                <ul>
+                    <li>✅ <strong>Templates</strong> são arquivos HTML processados pelo Django</li>
+                    <li>✅ Use <strong>variáveis</strong> com <code>{{ variavel }}</code></li>
+                    <li>✅ <strong>Herança</strong> com <code>{% extends %}</code> e <code>{% block %}</code></li>
+                    <li>✅ Tag <strong>{% if %}</strong> para condicionais</li>
+                    <li>✅ Tag <strong>{% for %}</strong> para loops</li>
+                    <li>✅ Tag <strong>{% url %}</strong> para URLs dinâmicas</li>
+                    <li>✅ <strong>{% load static %}</strong> para CSS/JS/imagens</li>
+                    <li>✅ Passar <strong>dados fictícios</strong> via contexto</li>
+                </ul>
+            </section>
+            
+            <!-- Slide 27: Próxima Aula -->
+            <section class="center">
+                <h2>📚 Próxima Aula</h2>
+                <h3 style="color: #666; font-weight: 400; margin-top: 40px;">Aula 04 - JavaScript com Django</h3>
+                <ul style="text-align: left; display: inline-block; margin-top: 40px;">
+                    <li>Integração JavaScript + Django</li>
+                    <li>Manipulação do DOM</li>
+                    <li>Eventos e interatividade</li>
+                    <li>Interfaces dinâmicas</li>
+                </ul>
+            </section>
+            
+            <!-- Slide Final -->
+            <section class="center">
+                <h1>Dúvidas?</h1>
+                <p style="font-size: 1.5em; color: var(--primary-red); margin-top: 60px;">
+                    Continue praticando! 🚀
+                </p>
+                <p style="margin-top: 80px; color: #888;">
+                    IFRN - Programação para Internet
+                </p>
+            </section>
+            
+        </div>
+    </div>
+    
+    <!-- Footer com nome do professor e número do slide -->
+    <div class="footer">
+        <div class="professor">IFRN - Prof. Raphael Muniz</div>
+        <div class="slide-number"></div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: false,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            plugins: [ RevealHighlight ],
+            width: 1280,
+            height: 720,
+            margin: 0.04,
+        });
+        
+        // Atualizar número do slide no rodapé
+        Reveal.on('slidechanged', event => {
+            const slideNumber = event.indexh + 1;
+            const totalSlides = Reveal.getTotalSlides();
+            document.querySelector('.slide-number').textContent = `${slideNumber} / ${totalSlides}`;
+        });
+        
+        // Inicializar o número do slide
+        document.addEventListener('DOMContentLoaded', () => {
+            const totalSlides = Reveal.getTotalSlides();
+            document.querySelector('.slide-number').textContent = `1 / ${totalSlides}`;
+        });
+    </script>
+</body>
+</html>

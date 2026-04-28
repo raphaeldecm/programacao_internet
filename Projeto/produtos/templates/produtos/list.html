@@ -1,5 +1,7 @@
-{% extends 'home.html' %}
+{% extends 'base.html' %}
 {% load static %}
+
+{% block title %}Produtos - Mercado{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/produtos.css' %}">
@@ -15,6 +17,7 @@
     <div class="table-card">
         <div class="table-header">
             <h2>Lista de Produtos</h2>
+            <a href="{% url 'produtos:produtos-create' %}" class="btn-new">+ Novo Produto</a>
         </div>
         <div class="table-wrapper">
             <table>
@@ -25,6 +28,7 @@
                         <th>Categoria</th>
                         <th>Preço</th>
                         <th>Estoque</th>
+                        <th style="text-align: center;">Ações</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -39,6 +43,13 @@
                         <td class="price">R$ 25,90</td>
                         <td>150 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'produtos:produtos-detail' %}" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="{% url 'produtos:produtos-update' %}" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Arroz Branco 5kg')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#002</td>
@@ -50,6 +61,13 @@
                         <td class="price">R$ 8,50</td>
                         <td>200 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'produtos:produtos-detail' %}" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="{% url 'produtos:produtos-update' %}" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Feijão Preto 1kg')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#003</td>
@@ -61,6 +79,13 @@
                         <td class="price">R$ 6,90</td>
                         <td>45 unidades</td>
                         <td><span class="badge badge-warning">Estoque Baixo</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Óleo de Soja 900ml')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#004</td>
@@ -72,6 +97,13 @@
                         <td class="price">R$ 4,50</td>
                         <td>180 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Açúcar Refinado 1kg')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#005</td>
@@ -83,6 +115,13 @@
                         <td class="price">R$ 12,90</td>
                         <td>95 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Café Torrado 500g')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#006</td>
@@ -94,6 +133,13 @@
                         <td class="price">R$ 4,80</td>
                         <td>10 unidades</td>
                         <td><span class="badge badge-danger">Estoque Crítico</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Leite Integral 1L')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#007</td>
@@ -105,6 +151,13 @@
                         <td class="price">R$ 3,50</td>
                         <td>220 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Macarrão Espaguete 500g')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#008</td>
@@ -116,6 +169,13 @@
                         <td class="price">R$ 2,90</td>
                         <td>130 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Molho de Tomate 340g')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#009</td>
@@ -127,6 +187,13 @@
                         <td class="price">R$ 1,50</td>
                         <td>300 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Sal Refinado 1kg')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#010</td>
@@ -138,6 +205,13 @@
                         <td class="price">R$ 4,20</td>
                         <td>160 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Farinha de Trigo 1kg')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#011</td>
@@ -149,6 +223,13 @@
                         <td class="price">R$ 3,80</td>
                         <td>85 unidades</td>
                         <td><span class="badge badge-success">Em Estoque</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Biscoito Cream Cracker 200g')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td>#012</td>
@@ -160,9 +241,28 @@
                         <td class="price">R$ 7,90</td>
                         <td>25 unidades</td>
                         <td><span class="badge badge-warning">Estoque Baixo</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="#" class="btn-action btn-view" title="Visualizar">👁️</a>
+                                <a href="#" class="btn-action btn-edit" title="Editar">✏️</a>
+                                <button class="btn-action btn-delete" title="Excluir" onclick="confirmDelete('Refrigerante Cola 2L')">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+    <script>
+        function confirmDelete(productName) {
+            if (confirm(`Tem certeza que deseja excluir o produto "${productName}"?\n\nEsta ação não pode ser desfeita.`)) {
+                // Aqui você pode adicionar a lógica de exclusão
+                alert('Produto excluído com sucesso!');
+                // window.location.reload();
+            }
+        }
+    </script>
+{% endblock extra_js %}

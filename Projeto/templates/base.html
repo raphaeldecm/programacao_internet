@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mercado Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include 'fragments/sidebar.html' %}
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% include 'fragments/header.html' %}
+
+        <!-- Content -->
+        <div class="container">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </main>
+
+    <script src="{% static 'js/style.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Novo Produto - Mercado{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/produtos.css' %}">
+{% endblock extra_css %}
+
+{% block header_title %}
+    <h1>Novo Produto</h1>
+    <p class="header-subtitle">Adicione um novo produto ao catálogo</p>
+{% endblock header_title %}
+
+{% block content %}
+    <div class="form-card">
+        <div class="form-header">
+            <h2>Informações do Produto</h2>
+            <p>Preencha os campos abaixo com as informações do produto</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Informações Básicas -->
+            <div class="form-group">
+                <label class="form-label required" for="nome">Nome do Produto</label>
+                <input 
+                    type="text" 
+                    id="nome" 
+                    name="nome" 
+                    class="form-input" 
+                    placeholder="Ex: Arroz Branco 5kg"
+                    required
+                >
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required" for="sku">SKU/Código</label>
+                    <input 
+                        type="text" 
+                        id="sku" 
+                        name="sku" 
+                        class="form-input" 
+                        placeholder="Ex: ARR-001"
+                        required
+                    >
+                    <small class="form-help">Código único do produto</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required" for="categoria">Categoria</label>
+                    <select id="categoria" name="categoria" class="form-select" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="graos">Grãos e Cereais</option>
+                        <option value="laticinios">Laticínios</option>
+                        <option value="bebidas">Bebidas</option>
+                        <option value="massas">Massas</option>
+                        <option value="conservas">Conservas</option>
+                        <option value="temperos">Temperos</option>
+                        <option value="biscoitos">Biscoitos</option>
+                        <option value="acucares">Açúcares e Doces</option>
+                        <option value="oleos">Óleos e Temperos</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="descricao">Descrição</label>
+                <textarea 
+                    id="descricao" 
+                    name="descricao" 
+                    class="form-textarea" 
+                    placeholder="Descrição detalhada do produto..."
+                ></textarea>
+                <small class="form-help">Descrição opcional do produto</small>
+            </div>
+
+            <!-- Preço e Estoque -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required" for="preco">Preço</label>
+                    <div class="input-group">
+                        <span class="input-prefix">R$</span>
+                        <input 
+                            type="number" 
+                            id="preco" 
+                            name="preco" 
+                            class="form-input" 
+                            placeholder="0.00"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required" for="estoque">Quantidade em Estoque</label>
+                    <input 
+                        type="number" 
+                        id="estoque" 
+                        name="estoque" 
+                        class="form-input" 
+                        placeholder="0"
+                        min="0"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="estoque_minimo">Estoque Mínimo</label>
+                    <input 
+                        type="number" 
+                        id="estoque_minimo" 
+                        name="estoque_minimo" 
+                        class="form-input" 
+                        placeholder="0"
+                        min="0"
+                    >
+                    <small class="form-help">Alerta quando estoque atingir este valor</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="status">Status</label>
+                    <select id="status" name="status" class="form-select">
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fornecedor -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="fornecedor">Fornecedor</label>
+                    <input 
+                        type="text" 
+                        id="fornecedor" 
+                        name="fornecedor" 
+                        class="form-input" 
+                        placeholder="Nome do fornecedor"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="marca">Marca</label>
+                    <input 
+                        type="text" 
+                        id="marca" 
+                        name="marca" 
+                        class="form-input" 
+                        placeholder="Marca do produto"
+                    >
+                </div>
+            </div>
+
+            <!-- Ações do Formulário -->
+            <div class="form-actions">
+                <a href="{% url 'produtos:produtos' %}" class="btn-cancel">Cancelar</a>
+                <button type="submit" class="btn-submit">Cadastrar Produto</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

@@ -1,101 +1,13 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercado Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {% block extra_css %}{% endblock %}
-</head>
-<body>
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <div class="logo-icon">M</div>
-                <span>Mercado</span>
-            </div>
-        </div>
-        <nav>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="{% url 'home' %}" class="nav-link active">
-                        <span class="nav-icon">📊</span>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'produtos:produtos' %}" class="nav-link">
-                        <span class="nav-icon">📦</span>
-                        <span>Produtos</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon">👥</span>
-                        <span>Clientes</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon">💰</span>
-                        <span>Vendas</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon">🛒</span>
-                        <span>Compras</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon">👤</span>
-                        <span>Usuários</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon">⚙️</span>
-                        <span>Configurações</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </aside>
+{% extends 'base.html' %}
 
-    <!-- Overlay for mobile -->
-    <div class="overlay" id="overlay"></div>
+{% block title %}Mercado Dashboard{% endblock %}
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-left">
-                <button class="menu-toggle" id="menuToggle">☰</button>
-                {% block header_title %}
-                    <h1>Dashboard</h1>
-                    <p class="header-subtitle">Bem-vindo ao painel de controle</p>
-                {% endblock header_title %}
-            </div>
-            <div class="header-right">
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <img src="{% static 'img/profile.png' %}" alt="Avatar">
-                    </div>
-                    <div class="user-details">
-                        <span class="user-name">Administrador</span>
-                        <span class="user-role">Admin</span>
-                    </div>
-                </div>
-                <button class="btn btn-outline" onclick="handleLogout()">Sair</button>
-            </div>
-        </header>
+{% block header_title %}
+    <h1>Dashboard</h1>
+    <p class="header-subtitle">Bem-vindo ao painel de controle</p>
+{% endblock header_title %}
 
-        <!-- Content -->
-        <div class="container">
-            {% block content %}
+{% block content %}
             <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
@@ -242,10 +154,4 @@
                     </table>
                 </div>
             </div>
-            {% endblock content %}
-        </div>
-    </main>
-
-    <script src="{% static 'js/style.js' %}"></script>
-</body>
-</html>
+{% endblock content %}

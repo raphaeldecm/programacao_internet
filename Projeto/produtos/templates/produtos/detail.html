@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ produto.nome }} - Mercado{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/produtos.css' %}">
+{% endblock extra_css %}
+
+{% block header_title %}
+    <h1>Detalhes do Produto</h1>
+    <p class="header-subtitle">Visualize as informações completas do produto</p>
+{% endblock header_title %}
+
+{% block content %}
+    <a href="{% url 'produtos:produtos' %}" class="back-link">
+        ← Voltar para lista de produtos
+    </a>
+
+    <div class="detail-container">
+        <div class="detail-card">
+            <div class="detail-header">
+                <div class="detail-title-section">
+                    <h1>Arroz Branco 5kg</h1>
+                    <p class="detail-subtitle">SKU: ARR-001 | ID: #001</p>
+                </div>
+                <div class="detail-actions">
+                    <a href="#" class="btn-icon btn-edit">
+                        ✏️ Editar
+                    </a>
+                    <button class="btn-icon btn-delete" onclick="confirmDelete()">
+                        🗑️ Excluir
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards de Informações Principais -->
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Preço</div>
+                    <div class="detail-value price">R$ 25,90</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Estoque</div>
+                    <div class="detail-value">150 unidades</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Categoria</div>
+                    <div class="detail-value" style="font-size: 1.1rem;">Grãos e Cereais</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="status-indicator status-success">
+                        <span class="status-dot"></span>
+                        Em Estoque
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descrição -->
+            <div class="detail-section">
+                <h3>Descrição do Produto</h3>
+                <div class="detail-description">
+                    Arroz branco tipo 1, grãos longos e finos. Produto de alta qualidade, ideal para o consumo diário. 
+                    Embalagem de 5kg, perfeito para famílias. Rico em carboidratos e de fácil preparo.
+                </div>
+            </div>
+
+            <!-- Informações Detalhadas -->
+            <div class="detail-section">
+                <h3>Informações Detalhadas</h3>
+                <div style="background: var(--bg-color); border-radius: 8px; overflow: hidden;">
+                    <div class="info-row">
+                        <span class="info-label">Código SKU</span>
+                        <span class="info-value">ARR-001</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Categoria</span>
+                        <span class="info-value">Grãos e Cereais</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Marca</span>
+                        <span class="info-value">Tio João</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Fornecedor</span>
+                        <span class="info-value">Distribuidora Alimentos SA</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Estoque Atual</span>
+                        <span class="info-value">150 unidades</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Estoque Mínimo</span>
+                        <span class="info-value">50 unidades</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Preço de Venda</span>
+                        <span class="info-value" style="color: var(--success-color);">R$ 25,90</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Status</span>
+                        <span class="info-value">
+                            <span class="badge badge-success">Ativo</span>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Data de Cadastro</span>
+                        <span class="info-value">15/03/2024</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Última Atualização</span>
+                        <span class="info-value">20/04/2024</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estatísticas de Vendas -->
+            <div class="detail-section">
+                <h3>Estatísticas de Vendas</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Vendas Este Mês</div>
+                        <div class="detail-value">45 unidades</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Receita Mensal</div>
+                        <div class="detail-value price">R$ 1.165,50</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Total de Vendas</div>
+                        <div class="detail-value">320 unidades</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Última Venda</div>
+                        <div class="detail-value" style="font-size: 1rem;">27/04/2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block extra_js %}
+    <script>
+        function confirmDelete() {
+            if (confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.')) {
+                // Aqui você pode adicionar a lógica de exclusão
+                alert('Produto excluído com sucesso!');
+                window.location.href = "{% url 'produtos:produtos' %}";
+            }
+        }
+    </script>
+{% endblock extra_js %}

@@ -97,25 +97,31 @@
         .footer {
             position: fixed;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7em;
+            left: 0;
+            right: 0;
+            font-size: 0.9em;
             color: #666;
-            width: 90%;
+            width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 0 20px;
+            padding: 0 40px;
+            z-index: 9999;
+            pointer-events: none;
+            background: transparent;
+        }
+        
+        .footer .custom-slide-number {
+            position: absolute;
+            left: 40px;
+            color: var(--primary-red);
+            font-weight: 600;
+            font-size: 16px;
         }
         
         .footer .professor {
-            text-align: left;
-        }
-        
-        .footer .slide-number {
-            text-align: right;
-            color: var(--primary-red);
-            font-weight: 600;
+            text-align: center;
+            font-size: 14px;
         }
         
         .highlight-box {
@@ -690,14 +696,34 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'</code></pre>
     
     <!-- Footer com nome do professor e número do slide -->
     <div class="footer">
+        <div class="custom-slide-number"></div>
         <div class="professor">IFRN - Prof. Raphael Muniz</div>
-        <div class="slide-number"></div>
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
     
     <script>
+        // Função para atualizar o número do slide
+        function updateSlideNumber() {
+            const slideNumberEl = document.querySelector('.custom-slide-number');
+            if (slideNumberEl) {
+                const currentSlide = Reveal.getIndices().h + 1;
+                const totalSlides = Reveal.getTotalSlides();
+                slideNumberEl.textContent = `${currentSlide} / ${totalSlides}`;
+            }
+        }
+        
+        // Registrar eventos ANTES de inicializar
+        Reveal.on('ready', function() {
+            updateSlideNumber();
+        });
+        
+        Reveal.on('slidechanged', function() {
+            updateSlideNumber();
+        });
+        
+        // Inicializar Reveal
         Reveal.initialize({
             hash: true,
             slideNumber: false,
@@ -707,19 +733,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'</code></pre>
             width: 1280,
             height: 720,
             margin: 0.04,
-        });
-        
-        // Atualizar número do slide no rodapé
-        Reveal.on('slidechanged', event => {
-            const slideNumber = event.indexh + 1;
-            const totalSlides = Reveal.getTotalSlides();
-            document.querySelector('.slide-number').textContent = `${slideNumber} / ${totalSlides}`;
-        });
-        
-        // Inicializar o número do slide
-        document.addEventListener('DOMContentLoaded', () => {
-            const totalSlides = Reveal.getTotalSlides();
-            document.querySelector('.slide-number').textContent = `1 / ${totalSlides}`;
         });
     </script>
 </body>

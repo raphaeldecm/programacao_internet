@@ -13,6 +13,56 @@ overlay.addEventListener('click', () => {
     overlay.classList.remove('active');
 });
 
+// Handle navigation menu active state
+const navLinks = document.querySelectorAll('.nav-link');
+
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Remove active class from all links
+        navLinks.forEach(l => l.classList.remove('active'));
+        
+        // Add active class to clicked link
+        this.classList.add('active');
+        
+        // Save active link to localStorage
+        localStorage.setItem('activeNavLink', this.getAttribute('href'));
+    });
+});
+
+// Restore active state from localStorage on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+    
+    // First, remove all active classes
+    navLinks.forEach(l => l.classList.remove('active'));
+    
+    // Find and activate the matching link based on current URL
+    let linkActivated = false;
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        
+        // Check if current path matches the link href
+        if (href === currentPath) {
+            link.classList.add('active');
+            linkActivated = true;
+            // Update localStorage with current active link
+            localStorage.setItem('activeNavLink', href);
+        }
+    });
+    
+    // If no link was activated by URL, check localStorage
+    if (!linkActivated) {
+        const activeLink = localStorage.getItem('activeNavLink');
+        if (activeLink) {
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === activeLink) {
+                    link.classList.add('active');
+                }
+            });
+        }
+    }
+});
+
 // Handle logout
 function handleLogout() {
     if (confirm('Tem certeza que deseja sair?')) {
@@ -134,11 +184,3 @@ function updateStats() {
     // This function could be used to fetch and update stats periodically
     // Example: fetch('/api/stats/').then(data => { ... })
 }
-
-// Active navigation highlight
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-    });
-});

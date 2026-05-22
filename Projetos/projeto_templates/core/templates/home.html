@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Escola - Home{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock extra_head %}
+
+{% block main_title %}
+  <h1 class="header-title">Bem vindo ao sistema da escola</h1>
+  <p class="header-subtitle">Esta é a página inicial do sistema da escola.</p>
+{% endblock main_title %}
+
+{% block content %}
+  <p class="content-text">Aqui você pode acessar as informações dos alunos, professores e turmas.</p>
+  <p class="content-text">Use o menu para navegar pelas diferentes seções do sistema.</p>
+{% endblock %}

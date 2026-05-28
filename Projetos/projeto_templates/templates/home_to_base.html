@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Home</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+  
+<header>
+  <h1>Sistema de Gestão Escolar</h1>
+</header>
+
+<nav class="navbar">
+  <ul class="nav-menu">
+    <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+    <li><a href="{% url 'alunos:alunos_list' %}" class="nav-link">Alunos</a></li>
+    <li><a href="{% url 'professores:professores_list' %}" class="nav-link">Professores</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h1 class="header-title">Bem vindo ao sistema da escola</h1>
+    <p class="header-subtitle">Esta é a página inicial do sistema da escola.</p>
+
+    <p class="content-text">Aqui você pode acessar as informações dos alunos, professores e turmas.</p>
+    <p class="content-text">Use o menu para navegar pelas diferentes seções do sistema.</p>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2023 My App. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

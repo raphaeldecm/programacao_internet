@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/alunos.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="detail-container">
+        <div class="detail-header">
+            <h1>Detalhes do Aluno</h1>
+            <a href="{% url 'alunos:alunos-list' %}" class="btn-back">← Voltar para lista</a>
+        </div>
+        
+        <div class="detail-card">
+            <div class="card-header">
+                <h2>{{ aluno.nome }}</h2>
+                <span class="badge">Matrícula: {{ aluno.matricula }}</span>
+            </div>
+            
+            <div class="card-body">
+                <div class="info-row">
+                    <span class="info-label">Curso:</span>
+                    <span class="info-value">{{ aluno.curso }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Idade:</span>
+                    <span class="info-value">{{ aluno.idade }} anos</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Período:</span>
+                    <span class="info-value">{{ aluno.periodo }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value"><a href="mailto:{{ aluno.email }}">{{ aluno.email }}</a></span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Telefone:</span>
+                    <span class="info-value">{{ aluno.telefone }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

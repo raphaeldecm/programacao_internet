@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/alunos.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Lista de Alunos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Curso</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aluno in alunos %}
+                <tr>
+                    <td>{{ aluno.matricula }}</td>
+                    <td>{{ aluno.nome }}</td>
+                    <td>{{ aluno.idade }}</td>
+                    <td>{{ aluno.curso }}</td>
+                    <td><a href="{% url 'alunos:aluno-detalhe' aluno.matricula %}">Detalhes</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

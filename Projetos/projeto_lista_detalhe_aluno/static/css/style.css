@@ -1,0 +1,67 @@
+/* Estilos gerais */
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+main {
+  padding: 20px;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.navbar {
+  background-color: #444;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+.nav-menu li {
+  margin: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: 15px 30px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background-color: #666;
+}

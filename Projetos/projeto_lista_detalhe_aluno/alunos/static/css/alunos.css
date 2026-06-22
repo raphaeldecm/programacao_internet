@@ -1,0 +1,170 @@
+/* Estilos para a tabela de alunos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+table thead {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table thead th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    transition: background-color 0.2s ease;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+table tbody tr:last-child {
+    border-bottom: 2px solid #4CAF50;
+}
+
+table tbody td {
+    padding: 12px 15px;
+}
+
+table tbody td a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 12px;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+table tbody td a:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Estilos para a página de detalhes */
+.detail-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #4CAF50;
+}
+
+.detail-header h1 {
+    margin: 0;
+    color: #333;
+}
+
+.btn-back {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-back:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.detail-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.badge {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.info-row {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    flex: 0 0 150px;
+    font-weight: 600;
+    color: #555;
+    font-size: 15px;
+}
+
+.info-value {
+    flex: 1;
+    color: #333;
+    font-size: 15px;
+}
+
+.info-value a {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.info-value a:hover {
+    color: #45a049;
+    text-decoration: underline;
+}

@@ -13,7 +13,7 @@ body {
 }
 
 header {
-  background-color: #333;
+  background-color: #4CAF50;
   color: white;
   padding: 10px;
   text-align: center;
@@ -28,14 +28,14 @@ main {
 }
 
 footer {
-  background-color: #333;
+  background-color: #b91313;
   color: white;
   padding: 10px;
   text-align: center;
 }
 
 .navbar {
-  background-color: #444;
+  background-color: #2f5731;
   padding: 0;
   margin: 0;
 }

@@ -20,11 +20,15 @@
         <tbody>
             {% for aluno in alunos %}
                 <tr>
-                    <td>{{ aluno.matricula }}</td>
+                    <td>{{ aluno.id }}</td>
                     <td>{{ aluno.nome }}</td>
                     <td>{{ aluno.idade }}</td>
                     <td>{{ aluno.curso }}</td>
-                    <td><a href="{% url 'alunos:aluno-detalhe' aluno.matricula %}">Detalhes</a></td>
+                    <td><a href="{% url 'alunos:aluno-detalhe' aluno.id %}">Detalhes</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Nenhum aluno cadastrado.</td>
                 </tr>
             {% endfor %}
         </tbody>

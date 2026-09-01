@@ -14,6 +14,9 @@
         
         <div class="detail-card">
             <div class="card-header">
+                {% if not aluno %}
+                    <h2>Aluno não encontrado</h2>
+                {% endif %}
                 <h2>{{ aluno.nome }}</h2>
                 <span class="badge">Matrícula: {{ aluno.matricula }}</span>
             </div>

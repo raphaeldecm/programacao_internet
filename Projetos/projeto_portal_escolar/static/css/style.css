@@ -1,33 +1,211 @@
-/* Estilos gerais */
-html {
-  height: 100%;
+/* Reset básico e tipografia moderna */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Garante que ocupe 100% da altura da tela */
 }
 
+/* Header */
 header {
-    background-color: #f0f0f0;
-    padding: 1rem;
+    background-color: #0b5c46; /* Verde institucional escuro */
+    color: #ffffff;
+    padding: 1.5rem 2rem;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* Menu de Navegação */
+nav {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+nav a {
+    text-decoration: none;
+    color: #0b5c46;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #1a8563;
+}
+
+/* Conteúdo Principal (preenche o resto da página) */
 main {
-  padding: 20px;
-  width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-  flex: 1;
+    flex: 1; /* Ocupa o espaço restante empurrando o footer */
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
 }
 
+h2 {
+    color: #0b5c46;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+/* Grid para Listagens */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Cards de Notícias */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-left: 5px solid #1a8563;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.card p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+/* Badges (Tags/Categorias) */
+.badge {
+    display: inline-block;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+}
+
+.badge.tag {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    margin-right: 0.5rem;
+}
+
+/* Botões e Links */
+.btn, .btn-link, .btn-back {
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #1a8563;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0b5c46;
+}
+
+.btn-link {
+    color: #1a8563;
+    margin-top: auto;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 2rem;
+    color: #555;
+}
+
+.btn-back:hover {
+    color: #0b5c46;
+}
+
+/* Lista Simples (Categorias) */
+.list-group {
+    list-style: none;
+}
+
+.list-group li {
+    background: white;
+    margin-bottom: 0.5rem;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.list-group a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 600;
+    display: block;
+}
+
+.list-group li:hover {
+    background-color: #f1f8f5;
+}
+
+/* Visualização Detalhada (Detail View) */
+.detail-view {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.detail-view .meta {
+    margin-bottom: 1.5rem;
+}
+
+.detail-view p {
+    line-height: 1.8;
+    color: #444;
+    font-size: 1.1rem;
+}
+
+/* Footer */
 footer {
-    background-color: #f0f0f0;
-    padding: 1rem;
+    background-color: #0b5c46;
+    color: #a3c4bc;
     text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
 }

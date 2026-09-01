@@ -1,23 +1,31 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Escolar</title>
+    <title>{% block title %}Portal Escolar{% endblock %}</title>
+    <!-- Substitua o link abaixo pela tag estática do Django se necessário -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header>
         <h1>Portal Escolar</h1>
     </header>
+    
+    <nav>
+        <a href="#">Início</a>
+        <a href="#">Categorias</a>
+        <a href="#">Notícias</a>
+    </nav>
+
     <main>
         {% block content %}
         {% endblock %}
     </main>
+
     <footer>
-        <p>&copy; 2024 Portal Escolar. Todos os direitos reservados.</p>
+        <p>&copy; 2026 Portal Escolar. Desenvolvido para fins educacionais.</p>
     </footer>
 </body>
 </html>

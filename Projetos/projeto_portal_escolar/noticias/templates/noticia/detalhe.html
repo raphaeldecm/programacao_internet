@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Notícia: {{ noticia.titulo }} - Portal Escolar{% endblock %}
+
+{% block content %}
+<h2>Detalhes da notícia: {{ noticia.titulo }}</h2>
+
+<div class="grid-container">
+    <div class="grid-item">
+        <h3>Informações da Notícia</h3>
+        <p><strong>Nome:</strong> {{ noticia.titulo }}</p>
+        <p><strong>Data de Publicação:</strong> {{ noticia.data_publicacao }}</p>
+        <p><strong>Categoria:</strong> {{ noticia.categoria }}</p>
+        <p><strong>Tags:</strong>
+            {% for tag in noticia.tags.all %}
+                {{ tag.nome }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Nenhuma tag associada.
+            {% endfor %}
+        </p>
+        <p><strong>Texto:</strong> {{ noticia.texto }}</p>
+    </div>
+</div>
+
+<a href="{% url 'noticias:noticias' %}" class="btn-back">&larr; Voltar para as notícias</a>
+{% endblock %}

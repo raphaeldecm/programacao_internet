@@ -13,19 +13,13 @@
         <h1>Portal Escolar</h1>
     </header>
     
-    <nav>
-        <a href="#">Início</a>
-        <a href="#">Categorias</a>
-        <a href="#">Notícias</a>
-    </nav>
+    {% include "fragments/nav.html" %}
 
     <main>
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer>
-        <p>&copy; 2026 Portal Escolar. Desenvolvido para fins educacionais.</p>
-    </footer>
+    {% include "fragments/footer.html" %}
 </body>
 </html>

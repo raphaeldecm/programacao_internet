@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Categoria: {{ categoria.nome }} - Portal Escolar{% endblock %}
+
+{% block content %}
+<h2>Detalhes da categoria: {{ categoria.nome }}</h2>
+
+<div class="grid-container">
+    <div class="grid-item">
+        <h3>Informações da Categoria</h3>
+        <p><strong>Nome:</strong> {{ categoria.nome }}</p>
+    </div>
+
+    <div class="grid-item">
+        <h3>Notícias Relacionadas</h3>
+            <ul>
+                {% for noticia in categoria.noticia_set.all %}
+                    <li><a href="{% url 'noticias:noticia_detalhe' noticia.id %}">{{ noticia.titulo }}</a></li>
+                {% empty %}
+                    <p>Nenhuma notícia relacionada a esta categoria.</p>
+                {% endfor %}
+            </ul>
+    </div>
+</div>
+
+<a href="{% url 'noticias:categorias' %}" class="btn-back">&larr; Voltar para as categorias</a>
+{% endblock %}

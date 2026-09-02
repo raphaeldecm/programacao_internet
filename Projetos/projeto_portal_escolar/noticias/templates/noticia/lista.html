@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Noticias - Portal Escolar{% endblock %}
+
+{% block content %}
+<h2>Noticias</h2>
+
+<ul class="list-group">
+    {% for noticia in noticias %}
+    <a href="{% url 'noticias:noticia_detalhe' noticia.id %}">
+      <li>
+          {{ noticia.titulo }} - {{ noticia.data_publicacao }}
+      </li>
+      
+    </a>
+    {% empty %}
+    <p>Nenhuma notícia cadastrada.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

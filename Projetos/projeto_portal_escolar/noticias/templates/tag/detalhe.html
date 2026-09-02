@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Tag: {{ tag.nome }} - Portal Escolar{% endblock %}
+
+{% block content %}
+<h2>Detalhes da tag: {{ tag.nome }}</h2>
+
+<div class="grid-container">
+    <div class="grid-item">
+        <h3>Informações da Tag</h3>
+        <p><strong>Nome:</strong> {{ tag.nome }}</p>
+    </div>
+
+    <div class="grid-item">
+        <h3>Notícias Relacionadas</h3>
+        {% if object.noticias.exists %}
+            <ul>
+                {% for noticia in object.noticias.all %}
+                    <li><a href="{% url 'noticias:noticia_detalhe' noticia.id %}">{{ noticia.titulo }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhuma notícia relacionada a esta categoria.</p>
+        {% endif %}
+    </div>
+</div>
+
+<a href="{% url 'noticias:' %}" class="btn-back">&larr; Voltar para as categorias</a>
+{% endblock %}

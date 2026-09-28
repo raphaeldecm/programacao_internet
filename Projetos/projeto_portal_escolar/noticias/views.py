@@ -108,6 +108,49 @@ def tag_delete_view(request, tag_id):
     tag.delete()
     return redirect("noticias:tags")
 
+def noticia_create_view(request):
+    if request.method == "POST":
+        form = forms.NoticiaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("noticias:noticias")
+    else:
+        form = forms.NoticiaForm()
+
+    return render(request, "noticia/form.html", {
+        "form": form,
+    })
+
+def noticia_update_view(request, noticia_id):
+    noticia = models.Noticia.objects.get(id=noticia_id)
+
+    if request.method == "POST":
+        form = forms.NoticiaForm(request.POST)
+        if form.is_valid():
+            noticia.titulo = form.cleaned_data["titulo"]
+            noticia.texto = form.cleaned_data["texto"]
+            noticia.categoria = form.cleaned_data["categoria"]
+            noticia.tags.set(form.cleaned_data["tags"])
+            noticia.save()
+            return redirect("noticias:noticias")
+    else:
+        form = forms.NoticiaForm(initial={
+            "titulo": noticia.titulo,
+            "texto": noticia.texto,
+            "categoria": noticia.categoria,
+            "tags": noticia.tags.all(),
+        })
+
+    return render(request, "noticia/form.html", {
+        "form": form,
+        "noticia": noticia,
+    })
+
+def noticia_delete_view(request, noticia_id):
+    noticia = models.Noticia.objects.get(id=noticia_id)
+    noticia.delete()
+    return redirect("noticias:noticias")
+
 def noticias_lista_view(request):
     noticias = models.Noticia.objects.all()
 

@@ -20,4 +20,7 @@ urlpatterns = [
   # Notícias
   path("noticia/lista/", views.noticias_lista_view, name="noticias"),
   path("noticia/detalhe/<int:noticia_id>/", views.noticia_detalhe_view, name="noticia_detalhe"),
+  path("noticia/criar/", views.noticia_create_view, name="noticia_create"),
+  path("noticia/editar/<int:noticia_id>/", views.noticia_update_view, name="noticia_update"),
+  path("noticia/deletar/<int:noticia_id>/", views.noticia_delete_view, name="noticia_delete"),
 ]

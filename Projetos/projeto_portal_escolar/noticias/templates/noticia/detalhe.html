@@ -22,5 +22,10 @@
     </div>
 </div>
 
+<div>
+    <a href="{% url 'noticias:noticia_update' noticia.id %}" class="btn-back btn-edit">Editar noticia</a>
+    <a href="{% url 'noticias:noticia_delete' noticia.id %}" class="btn-back btn-exclude">Deletar noticia</a>
+</div>
+
 <a href="{% url 'noticias:noticias' %}" class="btn-back">&larr; Voltar para as notícias</a>
 {% endblock %}

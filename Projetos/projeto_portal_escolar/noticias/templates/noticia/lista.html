@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>Noticias</h2>
-
+<a href="{% url 'noticias:noticia_create' %}" class="btn-back">+ Nova Notícia</a>
 <ul class="list-group">
     {% for noticia in noticias %}
     <a href="{% url 'noticias:noticia_detalhe' noticia.id %}">

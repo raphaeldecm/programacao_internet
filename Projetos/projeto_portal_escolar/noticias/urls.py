@@ -14,6 +14,9 @@ urlpatterns = [
   # Tags
   path("tag/lista/", views.tags_lista_view, name="tags"),
   path("tag/detalhe/<int:tag_id>/", views.tag_detalhe_view, name="tag_detalhe"),
+  path("tag/criar/", views.tag_create_view, name="tag_create"),
+  path("tag/editar/<int:tag_id>/", views.tag_update_view, name="tag_update"),
+  path("tag/deletar/<int:tag_id>/", views.tag_delete_view, name="tag_delete"),
   # Notícias
   path("noticia/lista/", views.noticias_lista_view, name="noticias"),
   path("noticia/detalhe/<int:noticia_id>/", views.noticia_detalhe_view, name="noticia_detalhe"),

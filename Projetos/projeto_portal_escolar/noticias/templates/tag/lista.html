@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>Tags</h2>
-
+<a href="{% url 'noticias:tag_create' %}" class="btn-back">+ Nova Tag</a>
 <ul class="list-group">
     {% for tag in tags %}
     <a href="{% url 'noticias:tag_detalhe' tag.id %}">

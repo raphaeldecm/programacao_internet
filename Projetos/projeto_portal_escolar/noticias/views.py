@@ -73,6 +73,41 @@ def tag_detalhe_view(request, tag_id):
         "tag": tag,
     })
 
+def tag_create_view(request):
+    if request.method == "POST":
+        form = forms.TagForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("noticias:tags")
+    else:
+        form = forms.TagForm()
+
+    return render(request, "tag/form.html", {
+        "form": form,
+    })
+
+def tag_update_view(request, tag_id):
+    tag = models.Tag.objects.get(id=tag_id)
+
+    if request.method == "POST":
+        form = forms.TagForm(request.POST)
+        if form.is_valid():
+            tag.nome = form.cleaned_data["nome"]
+            tag.save()
+            return redirect("noticias:tags")
+    else:
+        form = forms.TagForm(initial={"nome": tag.nome})
+
+    return render(request, "tag/form.html", {
+        "form": form,
+        "tag": tag,
+    })
+
+def tag_delete_view(request, tag_id):
+    tag = models.Tag.objects.get(id=tag_id)
+    tag.delete()
+    return redirect("noticias:tags")
+
 def noticias_lista_view(request):
     noticias = models.Noticia.objects.all()
 

@@ -24,5 +24,10 @@
     </div>
 </div>
 
+<div>
+    <a href="{% url 'noticias:tag_update' tag.id %}" class="btn-back btn-edit">Editar tag</a>
+    <a href="{% url 'noticias:tag_delete' tag.id %}" class="btn-back btn-exclude">Deletar tag</a>
+</div>
+
 <a href="{% url 'noticias:tags' %}" class="btn-back">&larr; Voltar para as tags</a>
 {% endblock %}

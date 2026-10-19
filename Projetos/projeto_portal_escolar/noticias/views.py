@@ -9,16 +9,12 @@ from . import forms, models
 def categorias_lista_view(request):
     categorias = models.Categoria.objects.all()
 
-    print("List Method:", request.method)
-
     return render(request, "categoria/lista.html", {
         "categorias": categorias
     })
 
 def categoria_detalhe_view(request, categoria_id):
     categoria = models.Categoria.objects.get(id=categoria_id)
-
-    print("Detail Method:", request.method)
 
     return render(request, "categoria/detalhe.html", {
         "categoria": categoria,
@@ -65,7 +61,7 @@ def categoria_delete_view(request, categoria_id):
             messages.success(request, "Categoria deletada com sucesso!")
             return redirect("noticias:categorias")
         except ProtectedError:
-            messages.error(request, "Não é possível deletar esta categoria, pois existem notícias associadas a ela.")
+            messages.warning(request, f"{categoria.nome} não pode ser deletada, pois existem notícias associadas a ela.")
             return redirect("noticias:categorias")
     
     return render(request, "categoria/confirmar_exclusao.html", {

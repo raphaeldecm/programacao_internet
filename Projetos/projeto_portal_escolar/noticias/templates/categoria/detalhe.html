@@ -24,7 +24,28 @@
 </div>
 <div>
     <a href="{% url 'noticias:categoria_update' categoria.id %}" class="btn-back btn-edit">Editar categoria</a>
-    <a href="{% url 'noticias:categoria_delete' categoria.id %}" class="btn-back btn-exclude">Deletar categoria</a>
+    <button type="button" class="btn-back btn-exclude" data-bs-toggle="modal" data-bs-target="#modalExcluir">Deletar categoria</button>
+</div>
+
+<div class="modal fade" id="modalExcluir" tabindex="-1" aria-labelledby="modalExcluirLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalExcluirLabel">Confirmar exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Deseja realmente deletar a categoria <strong>{{ categoria.nome }}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="post" action="{% url 'noticias:categoria_delete' categoria.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Deletar</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <a href="{% url 'noticias:categorias' %}" class="btn-back">&larr; Voltar para as categorias</a>
 {% endblock %}

@@ -1,6 +1,9 @@
+from django.contrib import messages
+from django.db.models import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 
 from . import forms, models
+
 
 # Create your views here.
 def categorias_lista_view(request):
@@ -56,8 +59,18 @@ def categoria_update_view(request, categoria_id):
 
 def categoria_delete_view(request, categoria_id):
     categoria = models.Categoria.objects.get(id=categoria_id)
-    categoria.delete()
-    return redirect("noticias:categorias")
+    if request.method == "POST":
+        try:
+            categoria.delete()
+            messages.success(request, "Categoria deletada com sucesso!")
+            return redirect("noticias:categorias")
+        except ProtectedError:
+            messages.error(request, "Não é possível deletar esta categoria, pois existem notícias associadas a ela.")
+            return redirect("noticias:categorias")
+    
+    return render(request, "categoria/confirmar_exclusao.html", {
+            "categoria": categoria,
+        })
 
 def tags_lista_view(request):
     tags = models.Tag.objects.all()
@@ -113,6 +126,7 @@ def noticia_create_view(request):
         form = forms.NoticiaForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Notícia criada com sucesso!")
             return redirect("noticias:noticias")
     else:
         form = forms.NoticiaForm()
@@ -132,6 +146,7 @@ def noticia_update_view(request, noticia_id):
             noticia.categoria = form.cleaned_data["categoria"]
             noticia.tags.set(form.cleaned_data["tags"])
             noticia.save()
+            messages.warning(request, "Notícia atualizada com sucesso!")
             return redirect("noticias:noticias")
     else:
         form = forms.NoticiaForm(initial={
@@ -148,8 +163,15 @@ def noticia_update_view(request, noticia_id):
 
 def noticia_delete_view(request, noticia_id):
     noticia = models.Noticia.objects.get(id=noticia_id)
-    noticia.delete()
-    return redirect("noticias:noticias")
+
+    if request.method == "POST":
+        noticia.delete()
+        messages.success(request, "Notícia deletada com sucesso!")
+        return redirect("noticias:noticias")
+    
+    return render(request, "noticia/confirmar_exclusao.html", {
+        "noticia": noticia,
+    })
 
 def noticias_lista_view(request):
     noticias = models.Noticia.objects.all()

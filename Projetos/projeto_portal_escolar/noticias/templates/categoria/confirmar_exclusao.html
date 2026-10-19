@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Exclusão - Portal Escolar{% endblock %}
+
+{% block content %}
+<h2>Confirmar Exclusão</h2>
+<p>Tem certeza de que deseja excluir a categoria: "{{ categoria.nome }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a href="{% url 'noticias:categoria_detalhe' categoria.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock content %}

@@ -17,7 +17,7 @@ class Noticia(models.Model):
     titulo = models.CharField(max_length=200)
     texto = models.TextField()
     data_publicacao = models.DateTimeField(auto_now_add=True)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE) # apresentar exemplo de related name e cascade
+    categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):

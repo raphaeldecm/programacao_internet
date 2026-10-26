@@ -142,7 +142,7 @@ def noticia_update_view(request, noticia_id):
             noticia.categoria = form.cleaned_data["categoria"]
             noticia.tags.set(form.cleaned_data["tags"])
             noticia.save()
-            messages.warning(request, "Notícia atualizada com sucesso!")
+            messages.success(request, "Notícia atualizada com sucesso!")
             return redirect("noticias:noticias")
     else:
         form = forms.NoticiaForm(initial={

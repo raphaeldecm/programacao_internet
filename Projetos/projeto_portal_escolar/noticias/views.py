@@ -28,7 +28,10 @@ def categoria_create_view(request):
             models.Categoria.objects.create(
                 nome=nome
             )
+            messages.success(request, "Categoria criada com sucesso!")
             return redirect("noticias:categorias")
+        else:
+            messages.error(request, "Erro ao criar categoria. Verifique os dados informados.")
     else:
         form = forms.CategoriaForm()
 
@@ -44,7 +47,10 @@ def categoria_update_view(request, categoria_id):
         if form.is_valid():
             categoria.nome = form.cleaned_data["nome"]
             categoria.save()
+            messages.success(request, "Categoria atualizada com sucesso!")
             return redirect("noticias:categorias")
+        else:
+            messages.error(request, "Erro ao atualizar categoria. Verifique os dados informados.")
     else:
         form = forms.CategoriaForm(initial={"nome": categoria.nome})
 
@@ -87,7 +93,10 @@ def tag_create_view(request):
         form = forms.TagForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Tag criada com sucesso!")
             return redirect("noticias:tags")
+        else:
+            messages.error(request, "Erro ao criar tag. Verifique os dados informados.")
     else:
         form = forms.TagForm()
 
@@ -101,9 +110,12 @@ def tag_update_view(request, tag_id):
     if request.method == "POST":
         form = forms.TagForm(request.POST)
         if form.is_valid():
+            messages.success(request, "Tag atualizada com sucesso!")
             tag.nome = form.cleaned_data["nome"]
             tag.save()
             return redirect("noticias:tags")
+        else:
+            messages.error(request, "Erro ao atualizar tag. Verifique os dados informados.")
     else:
         form = forms.TagForm(initial={"nome": tag.nome})
 

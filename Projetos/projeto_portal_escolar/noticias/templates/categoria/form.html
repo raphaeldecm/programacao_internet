@@ -7,7 +7,11 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <label for="id_nome" class="form-label">Nome</label>
+    <input type="text" name="nome" id="id_nome" class="form-control" value="{{ form.nome.value|default_if_none:'' }}">
+    {% if form.nome.errors %}
+        <div class="text-danger">{{ form.nome.errors }}</div>
+    {% endif %}
     <button type="submit">Salvar</button>
 </form>
 

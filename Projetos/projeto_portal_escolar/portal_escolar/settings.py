@@ -71,7 +71,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'portal_escolar.wsgi.application'
 
+from django.contrib.messages import constants as messages
 
+MESSAGE_TAGS = {
+    messages.DEBUG: "secondary",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "danger",
+}
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 

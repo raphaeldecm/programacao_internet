@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Gestão acadêmica</h1>
+<p>Consulte as telas de cursos e estudantes para conhecer a navegação do sistema.</p>
+<div class="d-flex gap-2">
+    <a class="btn btn-primary" href="{% url 'curso:curso_lista' %}">Ver cursos</a>
+    <a class="btn btn-primary" href="{% url 'estudante:estudante_lista' %}">Ver estudantes</a>
+</div>
+{% endblock %}

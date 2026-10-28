@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{% if request.resolver_match.url_name == 'curso_editar' %}Editar{% else %}Novo{% endif %} curso</h1>
+<p>Campos demonstrativos. Na edição, o preenchimento com os dados do registro será implementado na atividade.</p>
+<!-- Atividade: criar um Form/ModelForm, validar o POST e exibir os erros por campo. -->
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="id_nome" class="form-label">Nome</label>
+        <input class="form-control" id="id_nome" name="nome" type="text">
+    </div>
+    <div class="mb-3">
+        <label for="id_carga_horaria" class="form-label">Carga horária</label>
+        <input class="form-control" id="id_carga_horaria" name="carga_horaria" type="number">
+    </div>
+    <button type="button" class="btn btn-primary" disabled>Salvar (a implementar)</button>
+    <a class="btn btn-secondary" href="{% url 'curso:curso_lista' %}">Cancelar</a>
+</form>
+{% endblock %}

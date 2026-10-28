@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Estudantes</h1>
+<a class="btn btn-primary mb-3" href="{% url 'estudante:estudante_criar' %}">Novo estudante</a>
+<!-- Atividade: buscar os registros e usar um laço com tratamento de lista vazia. -->
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead><tr><th scope="col">Nome</th><th scope="col">Matrícula</th><th scope="col">E-mail</th><th scope="col">Curso</th><th scope="col">Ações</th></tr></thead>
+        <tbody>
+            <tr><td>Ana Silva</td><td>20260001</td><td>ana@example.com</td><td>Informática</td><td>
+                <a href="{% url 'estudante:estudante_detalhe' 1 %}">Visualizar</a> ·
+                <a href="{% url 'estudante:estudante_editar' 1 %}">Editar</a> ·
+                <a href="{% url 'estudante:estudante_excluir' 1 %}">Excluir</a>
+            </td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

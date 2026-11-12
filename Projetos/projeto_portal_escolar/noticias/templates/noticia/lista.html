@@ -1,20 +1,77 @@
 {% extends 'base.html' %}
 
-{% block title %}Noticias - Portal Escolar{% endblock %}
+{% block title %}Notícias - Portal Escolar{% endblock %}
 
 {% block content %}
-<h2>Noticias</h2>
-<a href="{% url 'noticias:noticia_create' %}" class="btn-back">+ Nova Notícia</a>
-<ul class="list-group">
-    {% for noticia in noticias %}
-    <a href="{% url 'noticias:noticia_detalhe' noticia.id %}">
-      <li>
-          {{ noticia.titulo }} - {{ noticia.data_publicacao }}
-      </li>
-      
-    </a>
-    {% empty %}
-    <p>Nenhuma notícia cadastrada.</p>
-    {% endfor %}
-</ul>
+<h2>Notícias</h2>
+
+<form id="news-filters" method="get" class="news-filters" role="search" aria-label="Filtrar notícias">
+    <div class="news-filter-fields">
+    <div class="news-filter-field news-filter-search">
+    <label for="busca">Buscar notícia</label>
+    <input id="busca" class="form-control" type="search" name="busca" placeholder="Pesquisar..." value="{{ request.GET.busca|default_if_none:'' }}">
+    </div>
+    <div class="news-filter-field">
+    <label for="categoria">Categoria</label>
+    <select id="categoria" name="categoria" class="form-select">
+        <option value="">Todas as categorias</option>
+        {% for categoria in categorias %}
+        <option value="{{ categoria.pk }}"
+            {% if categoria.pk|stringformat:'s' == categoria_selecionada %}selected{% endif %}>
+            {{ categoria.nome }}
+        </option>
+        {% endfor %}
+    </select>
+    </div>
+    <div class="news-filter-field">
+    <label for="tag">Tags</label>
+    <select id="tag" name="tag" class="form-select" multiple size="3" aria-describedby="tag-help">
+        {% for tag in tags %}
+        <option value="{{ tag.pk }}"
+            {% if tag.pk|stringformat:'s' in tags_selecionadas %}selected{% endif %}>
+            {{ tag.nome }}
+        </option>
+        {% endfor %}
+    </select>
+    <small id="tag-help" class="text-muted">Use Ctrl (Windows/Linux) ou Command (Mac) para selecionar várias tags. Sem seleção, todas as tags.</small>
+    </div>
+    </div>
+    <button type="submit" class="btn news-button">Pesquisar</button>
+</form>
+
+<div class="news-actions">
+    <a href="{% url 'noticias:noticia_create' %}" class="btn news-button">+ Nova Notícia</a>
+</div>
+
+<div class="news-table-container" role="region" aria-label="Lista de notícias" tabindex="0">
+<table class="table news-table">
+    <thead>
+        <tr>
+            <th scope="col"><button type="submit" form="news-filters" name="coluna" value="titulo" class="news-column-button">Título</button></th>
+            <th scope="col"><button type="submit" form="news-filters" name="coluna" value="data_publicacao" class="news-column-button">Data de Publicação</button></th>
+            <th scope="col"><button type="submit" form="news-filters" name="coluna" value="categoria" class="news-column-button">Categoria</button></th>
+            <th scope="col"><button type="submit" form="news-filters" name="coluna" value="tags" class="news-column-button">Tags</button></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for noticia in noticias %}
+        <tr>
+            <td><a href="{% url 'noticias:noticia_detalhe' noticia.id %}" title="{{ noticia.titulo }}">{{ noticia.titulo|truncatechars:50 }}</a></td>
+            <td>{{ noticia.data_publicacao }}</td>
+            <td><span class="badge">{{ noticia.categoria.nome }}</span></td>
+            <td>
+                {% for tag in noticia.tags.all %}
+                    <span class="badge tag">{{ tag.nome }}</span>
+                {% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="news-empty">Nenhuma notícia encontrada.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
 {% endblock %}

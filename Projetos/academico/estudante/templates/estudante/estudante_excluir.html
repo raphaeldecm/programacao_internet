@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Excluir estudante</h1>
+<p>Confirma a exclusão de <strong>Ana Silva</strong>?</p>
+<!-- Atividade: excluir somente por POST, tratar relacionamentos protegidos e emitir uma mensagem. -->
+<form method="post">
+    {% csrf_token %}
+    <button type="button" class="btn btn-danger" disabled>Confirmar exclusão (a implementar)</button>
+    <a class="btn btn-secondary" href="{% url 'estudante:estudante_lista' %}">Cancelar</a>
+</form>
+{% endblock %}

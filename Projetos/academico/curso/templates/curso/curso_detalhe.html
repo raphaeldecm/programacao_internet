@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Detalhes do curso</h1>
+<!-- Atividade: carregar o registro pelo pk, tratar registro inexistente e apresentar os relacionamentos. -->
+<dl>
+    <dt>Nome</dt><dd>Informática</dd>
+    <dt>Carga horária</dt><dd>1200</dd>
+    <dt>Estudantes do curso</dt><dd><a href="{% url 'estudante:estudante_detalhe' 1 %}">Ana Silva</a></dd>
+</dl>
+<a class="btn btn-primary" href="{% url 'curso:curso_editar' 1 %}">Editar</a>
+<a class="btn btn-outline-danger" href="{% url 'curso:curso_excluir' 1 %}">Excluir</a>
+<a class="btn btn-secondary" href="{% url 'curso:curso_lista' %}">Voltar</a>
+{% endblock %}

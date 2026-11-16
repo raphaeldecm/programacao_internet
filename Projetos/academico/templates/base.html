@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Gestão acadêmica{% endblock %}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark" aria-label="Navegação principal">
+        <div class="container gap-2">
+            <a class="navbar-brand" href="{% url 'home' %}">IFRN • Gestão acadêmica</a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-light" href="{% url 'curso:curso_lista' %}">Cursos</a>
+                <a class="btn btn-outline-light" href="{% url 'estudante:estudante_lista' %}">Estudantes</a>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        <p class="alert alert-info">Protótipo didático: dados fictícios e fixos no HTML. Salvar e excluir ainda não executam operações.</p>
+        <!-- Atividade: apresentar aqui as mensagens de sucesso e erro do Django. -->
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

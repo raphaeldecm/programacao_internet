@@ -182,15 +182,6 @@ def noticias_lista_view(request):
         if tags_selecionadas:
             noticias = noticias.filter(tags__id__in=tags_selecionadas).distinct()
 
-        coluna = request.GET.get('coluna')
-        if coluna:
-            if coluna == 'titulo':
-                noticias = noticias.order_by('titulo')
-            elif coluna == 'data_publicacao':
-                noticias = noticias.order_by('data_publicacao')
-            elif coluna == 'categoria':
-                noticias = noticias.order_by('categoria__nome')
-
     return render(request, "noticia/lista.html", {
         "noticias": noticias,
         "categorias": models.Categoria.objects.all(),

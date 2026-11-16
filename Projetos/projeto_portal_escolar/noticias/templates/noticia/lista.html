@@ -54,7 +54,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for noticia in noticias %}
+        {% for noticia in page_obj.object_list %}
         <tr>
             <td><a href="{% url 'noticias:noticia_detalhe' noticia.id %}" title="{{ noticia.titulo }}">{{ noticia.titulo|truncatechars:50 }}</a></td>
             <td>{{ noticia.data_publicacao }}</td>
@@ -72,6 +72,56 @@
         {% endfor %}
     </tbody>
 </table>
+    
+{% comment %} <nav aria-label="Navegação de páginas" class="news-pagination">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.busca %}busca={{ request.GET.busca }}&{% endif %}{% if request.GET.categoria %}categoria={{ request.GET.categoria }}&{% endif %}{% for tag in tags_selecionadas %}tag={{ tag }}&{% endfor %}page={{ page_obj.previous_page_number }}" aria-label="Página anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" aria-hidden="true">&laquo;</span>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?{% if request.GET.busca %}busca={{ request.GET.busca }}&{% endif %}{% if request.GET.categoria %}categoria={{ request.GET.categoria }}&{% endif %}{% for tag in tags_selecionadas %}tag={{ tag }}&{% endfor %}page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if request.GET.busca %}busca={{ request.GET.busca }}&{% endif %}{% if request.GET.categoria %}categoria={{ request.GET.categoria }}&{% endif %}{% for tag in tags_selecionadas %}tag={{ tag }}&{% endfor %}page={{ page_obj.next_page_number }}" aria-label="Próxima página">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" aria-hidden="true">&raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+        </nav> {% endcomment %}
+
+        <p>
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+        </p>
+        
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Página Anterior</a>
+        {% else %}
+            Página Anterior
+        {% endif %}
+
+        {% if page_obj.has_next %} 
+            <a href="?page={{ page_obj.next_page_number }}"> Próxima Página</a>
+        {% else %}
+            Próxima Página
+        {% endif %}
 </div>
 
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.db.models import ProtectedError
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 from . import forms, models
 
@@ -181,9 +182,15 @@ def noticias_lista_view(request):
             noticias = noticias.filter(categoria__id=request.GET.get("categoria"))
         if tags_selecionadas:
             noticias = noticias.filter(tags__id__in=tags_selecionadas).distinct()
+    
+    noticias = noticias.order_by("-data_publicacao", "-id")
+    paginator = Paginator(noticias, 5)  # 5 notícias por página
+    numero_pagina = request.GET.get('page')
+    page_obj = paginator.get_page(numero_pagina) # apenas os objetos da página atual
 
     return render(request, "noticia/lista.html", {
         "noticias": noticias,
+        "page_obj": page_obj,
         "categorias": models.Categoria.objects.all(),
         "tags": models.Tag.objects.all(),
         "categoria_selecionada": categoria,

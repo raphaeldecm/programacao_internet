@@ -20,6 +20,10 @@
         
         {% include "fragments/_mensagens.html" %}
 
+        {% if user.is_authenticated %}
+            <p class="portal-welcome" role="status">Bem-vindo, <strong>{{ user.username }}</strong>!</p>
+        {% endif %}
+
         {% block content %}
         {% endblock %}
     </main>

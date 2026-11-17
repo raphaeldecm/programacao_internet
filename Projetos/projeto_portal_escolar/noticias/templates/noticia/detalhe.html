@@ -21,12 +21,12 @@
         <p><strong>Texto:</strong> {{ noticia.texto }}</p>
     </div>
 </div>
-
-<div>
-    <a href="{% url 'noticias:noticia_update' noticia.id %}" class="btn-back btn-edit">Editar noticia</a>
-    <button type="button" class="btn-back btn-exclude" data-bs-toggle="modal" data-bs-target="#modalExcluir">Deletar noticia</button>
-</div>
-
+{% if user.is_authenticated %}
+    <div>
+        <a href="{% url 'noticias:noticia_update' noticia.id %}" class="btn-back btn-edit">Editar noticia</a>
+        <button type="button" class="btn-back btn-exclude" data-bs-toggle="modal" data-bs-target="#modalExcluir">Deletar noticia</button>
+    </div>
+{% endif %}
 {% include 'noticia/confirmar_exclusao.html' %}
 
 <a href="{% url 'noticias:noticias' %}" class="btn-back">&larr; Voltar para as notícias</a>

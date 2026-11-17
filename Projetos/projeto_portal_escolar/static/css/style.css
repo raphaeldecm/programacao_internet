@@ -29,16 +29,28 @@ header h1 {
 }
 
 /* Menu de Navegação */
-nav {
+.portal-nav {
     background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-nav a {
+.portal-nav-links {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 2rem;
+}
+
+.portal-nav-account {
+    justify-self: end;
+}
+
+.portal-nav-links a {
     text-decoration: none;
     color: #0b5c46;
     font-weight: 600;
@@ -46,7 +58,7 @@ nav a {
     transition: color 0.3s ease;
 }
 
-nav a:hover {
+.portal-nav-links a:hover {
     color: #1a8563;
 }
 
@@ -57,6 +69,17 @@ main {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
+}
+
+.portal-welcome {
+    margin: 0 0 1.5rem;
+    padding: 1rem;
+    border: 1px solid #c9e3d4;
+    border-inline-start: 4px solid #1a8563;
+    border-radius: 6px;
+    background-color: #e8f5e9;
+    color: #0b5c46;
+    overflow-wrap: anywhere;
 }
 
 h2 {
@@ -277,7 +300,8 @@ btn-edit:hover {
     min-height: 42px;
 }
 
-.news-button {
+.news-button,
+.portal-login-logout {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -295,7 +319,9 @@ btn-edit:hover {
 }
 
 .news-button:hover,
-.news-button:focus-visible {
+.news-button:focus-visible,
+.portal-login-logout:hover,
+.portal-login-logout:focus-visible {
     background-color: #0b5c46;
     color: #fff;
 }
@@ -303,6 +329,7 @@ btn-edit:hover {
 .news-filter-field input:focus-visible,
 .news-filter-field select:focus-visible,
 .news-button:focus-visible,
+.portal-login-logout:focus-visible,
 .news-table-container:focus-visible,
 .news-table a:focus-visible {
     outline: 3px solid #1a8563;
@@ -404,6 +431,20 @@ btn-edit:hover {
 }
 
 @media (max-width: 600px) {
+    .portal-nav {
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 0.75rem;
+    }
+
+    .portal-nav-links {
+        grid-column: 1 / -1;
+        gap: 0.25rem 0.75rem;
+    }
+
+    .portal-nav:has(.portal-nav-account) .portal-nav-links {
+        grid-column: 1;
+    }
+
     .news-filter-fields {
         flex-basis: 100%;
         flex-wrap: wrap;

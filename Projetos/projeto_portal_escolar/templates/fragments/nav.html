@@ -1,6 +1,19 @@
-<nav>
+<nav class="portal-nav" aria-label="Navegação principal">
+    <div class="portal-nav-links">
         <a href="{% url 'core:home' %}">Início</a>
         <a href="{% url 'noticias:categorias' %}">Categorias</a>
         <a href="{% url 'noticias:tags' %}">Tags</a>
         <a href="{% url 'noticias:noticias' %}">Notícias</a>
-    </nav>
+    </div>
+
+    {% if user.is_authenticated %}
+        <form class="portal-nav-account" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="portal-login-logout">Sair</button>
+        </form>
+    {% else %}
+        <div class="portal-nav-account">
+            <a class="portal-login-logout" href="{% url 'login' %}">Login</a>
+        </div>
+    {% endif %}
+</nav>

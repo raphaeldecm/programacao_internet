@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import ProtectedError
 from django.shortcuts import redirect, render
@@ -125,6 +126,7 @@ def tag_delete_view(request, tag_id):
     tag.delete()
     return redirect("noticias:tags")
 
+@login_required
 def noticia_create_view(request):
     if request.method == "POST":
         form = forms.NoticiaForm(request.POST)
@@ -139,6 +141,7 @@ def noticia_create_view(request):
         "form": form,
     })
 
+@login_required
 def noticia_update_view(request, noticia_id):
     noticia = models.Noticia.objects.get(id=noticia_id)
 
@@ -156,6 +159,7 @@ def noticia_update_view(request, noticia_id):
         "noticia": noticia,
     })
 
+@login_required
 def noticia_delete_view(request, noticia_id):
     noticia = models.Noticia.objects.get(id=noticia_id)
 

@@ -69,6 +69,10 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "noticias:noticias"
+LOGOUT_REDIRECT_URL = "login"
+
 WSGI_APPLICATION = 'portal_escolar.wsgi.application'
 
 from django.contrib.messages import constants as messages
@@ -113,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 

@@ -1,8 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
 from django.db.models import ProtectedError
 from django.shortcuts import redirect, render
+
+from usuarios.permissions import user_editor
 
 from . import forms, models
 
@@ -127,6 +129,7 @@ def tag_delete_view(request, tag_id):
     return redirect("noticias:tags")
 
 @login_required
+@user_passes_test(user_editor)
 def noticia_create_view(request):
     if request.method == "POST":
         form = forms.NoticiaForm(request.POST)

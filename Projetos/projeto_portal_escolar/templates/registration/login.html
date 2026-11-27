@@ -37,5 +37,9 @@
 
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
+
+    {% if not user.is_authenticated %}
+        <p><a href="{% url 'usuarios:cadastrar_usuario' %}">Cadastrar</a></p>
+    {% endif %}
 </div>
 {% endblock %}
